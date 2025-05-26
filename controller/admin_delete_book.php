@@ -8,5 +8,5 @@ if (isset($_GET['del'])) {
     $book->deleteBook($id);
 }
 
-header("Location:index.php");
+header("Location:../public/index.php");
 exit;

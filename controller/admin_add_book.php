@@ -1,11 +1,11 @@
 <form method="POST" action="" enctype="multipart/form-data">
-    <input type="text" name="name" required placeholder="اسم الكتاب">
-    <input type="text" name="author" required placeholder="الكاتب">
-    <input type="number" name="year" required placeholder="سنة النشر">
-    <input type="number" name="price" required placeholder="السعر">
-    <textarea name="description" required placeholder="الوصف"></textarea>
-    <input type="file" name="image">
-    <input type="submit" name="submit" value="إضافة">
+    <input type="text" name="name" required placeholder="Book name "><br><br>
+    <input type="text" name="author" required placeholder="author"><br><br>
+    <input type="number" name="year" required placeholder="year"><br><br>
+    <input type="number" name="price" required placeholder="price"><br><br>
+    <textarea name="description" required placeholder="description"></textarea><br><br>
+    <input type="file" name="image"><br><br>
+    <input type="submit" name="submit" value="add"><br><br>
 </form>
 
 <?php
@@ -17,7 +17,7 @@ $book = new Book($pdo);
 if (isset($_POST['submit'])) {
     $image_url = null;
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $dir = "uploadImages/";
+        $dir = "../public/uploadImages/";
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true); // إنشاء المجلد إذا لم يكن موجودًا
         }

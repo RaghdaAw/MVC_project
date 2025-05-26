@@ -39,7 +39,7 @@ $books = $myBooks->getAllBooks();
             <p><img src="<?= $row['image_url']; ?>" alt="Book Image" style="width:100px;height:auto;"></p>
         <?php endif; ?>
 
-        <a href="admin_delete_book.php?del=<?= $row['product_id']; ?>" 
+        <a href="/MVC-project/MVC_project/controller/admin_delete_book.php?del=<?= $row['product_id']; ?>" 
            onclick="return confirm('هل أنت متأكد من حذف هذا الكتاب؟');" 
            class="delete-button">
             <i class="fa-solid fa-xmark delete"></i> <span>deletet</span>

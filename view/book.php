@@ -10,3 +10,13 @@
     <p><?= number_format($book['price'], 2) ?> €</p>
   </article>
 <?php endforeach; ?>
+
+<!-- voor admin_books_list.php -->
+<?php foreach ($books as $row): ?>
+    <div>
+        <p><?= $row['name']; ?> - <?= $row['author']; ?></p>
+        <img src="<?= $row['image_url']; ?>" width="100">
+        <a href="admin_delete_book.php?del=<?= $row['product_id']; ?>"
+           onclick="return confirm('هل أنت متأكد من الحذف؟');">حذف</a>
+    </div>
+<?php endforeach; ?>
