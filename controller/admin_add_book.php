@@ -17,7 +17,7 @@ $book = new Book($pdo);
 if (isset($_POST['submit'])) {
     $image_url = null;
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $dir = "../public/uploadImages/";
+        $dir = "../view/uploadImages/";
         if (!file_exists($dir)) {
             mkdir($dir, 0777, true); // إنشاء المجلد إذا لم يكن موجودًا
         }
