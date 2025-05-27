@@ -39,13 +39,13 @@ class UserController
             $user = $this->userModel->login($username, $password);
             if ($user) {
                 $_SESSION['user'] = $user;
-                header("Location: ../view/index.php");
+                header("Location: view/index.php");
                 exit;
             } else {
                 echo "❌ username or passwor is fout.";
             }
         }
-        include '../view/login.php';
+        include 'view/login.php';
     }
 
     public function logout()

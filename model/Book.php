@@ -1,7 +1,5 @@
 <?php
 include("dbConnect.php");
-// include("admin_add_book.php");
-// include("Admin_add_book.php");
 class Book
 {
     private $pdo;
