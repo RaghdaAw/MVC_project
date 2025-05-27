@@ -18,6 +18,7 @@
 <body class="is-preload">
     <?php
     include '../model/Book.php';
+    include '../controller/BookController.php';
     ?>
     <div>
 <?php
@@ -48,6 +49,15 @@ $books = $myBooks->getAllBooks();
         <hr>
     </div>
 <?php endforeach; ?>
+<?php
+$bookController = new BookController($pdo);
+
+$page = $_GET['page'] ?? 'books';
+
+if ($page === 'books') {
+    $bookController->showAllBooks();
+}
+?>
 
 <?php
     // $row = $selectPost->fetch(PDO::FETCH_ASSOC);
