@@ -1,5 +1,5 @@
 <?php
-include_once '../model/Book.php';
+// include_once '../model/Book.php';
 
 class BookController
 {
@@ -13,6 +13,6 @@ class BookController
     public function showAllBooks()
     {
         $books = $this->bookModel->getAllBooks();
-        include '../view/book_list.php'; // الملف الذي يحتوي على HTML
+        include '../view/index.php'; // الملف الذي يحتوي على HTML
     }
 }

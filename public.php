@@ -1,6 +1,7 @@
 <?php
-require_once 'controller/UserController.php';
 require_once 'model/dbConnect.php';
+require_once 'model/Book.php';
+require_once 'controller/UserController.php';
 
 $controller = new UserController($pdo);
 
