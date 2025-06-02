@@ -41,4 +41,19 @@ class User
         }
         return false;
     }
+
+    
+  public function getAllusers()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users");
+        $stmt->execute();
+         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+public function deleteUser($user_id)
+{
+    // First, delete the user from the database
+    $stmt = $this->pdo->prepare("DELETE FROM users WHERE user_id = :id");
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+    return $stmt->execute();
+}
 }
