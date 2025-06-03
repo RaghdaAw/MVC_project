@@ -12,23 +12,29 @@ class UserController
     }
     public function register()
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'] ?? '';
             $username = $_POST['username'] ?? '';
             $password = $_POST['password'] ?? '';
+            echo "test raghda";
 
             if ($this->userModel->register($firstname, $lastname, $password, $username)) {
-                echo "✅ User registered successfully!";
-            exit;
+                // echo "✅ User registered successfully!";
+                header("Location: view/login.php"); // ✅ إعادة التوجيه بعد التسجيل
+                exit;
+
+
             } else {
                 echo "❌ Failed to register user.";
             }
         } else {
-            // استعرض الفورم إن لم يكن POST
-           header("Location: ../view/register.php");
+
+            //    header("Location: view/register.php");
             exit;
         }
+
     }
     public function login()
     {
@@ -40,14 +46,14 @@ class UserController
             if ($user) {
                 session_start();
                 $_SESSION['user'] = $user;
-                header("Location: ../view/index.php");
+                header("Location: view/index.php");
                 exit;
             } else {
                 echo "❌ Invalid username or password.";
             }
         } else {
             // استعرض الفورم إن لم يكن POST
-            include __DIR__ . '/../view/login.php';
+            // include __DIR__ . 'view/login.php';
         }
     }
     public function logout()
@@ -87,3 +93,4 @@ if (isset($_GET['page']) && $_GET['page'] === 'users') {
 } elseif (isset($_GET['del'])) {
     $controller->deleteUser();
 }
+

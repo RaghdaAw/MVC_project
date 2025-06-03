@@ -21,7 +21,7 @@ class User
             ':password' => $hashedPassword,
             ':username' => $username
         ]);
-        echo "✅ User registered successfully!<br>";
+        // echo "✅ User registered successfully!<br>";
         return $stmt->rowCount() > 0;
     } catch (PDOException $e) {
         echo "❌ Database error: " . $e->getMessage();
