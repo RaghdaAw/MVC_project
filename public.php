@@ -1,23 +1,64 @@
 <?php
 require_once 'model/dbConnect.php';
-require_once 'model/Book.php';
 require_once 'controller/UserController.php';
+<<<<<<< HEAD
+require_once 'controller/HomeController.php';
 
-$controller = new UserController($pdo);
+$userController = new UserController($pdo);
+$homeController = new HomeController();
+=======
+require_once 'controller/HomeController.php'; 
 
-$page = $_GET['page'] ?? 'login';
+$userController = new UserController($pdo);
+$homeController = new HomeController(); 
+>>>>>>> origin/test_admin
 
-switch ($page) {
-    case 'register':
-        $controller->register();
-        break;
-    case 'login':
-        $controller->login();
-        break;
-    case 'logout':
-        $controller->logout();
-        break;
-    default:
-        echo "الصفحة غير موجودة.";
-        break;
+if (isset($_GET['page'])) {
+    switch ($_GET['page']) {
+        case 'register':
+            $userController->register();
+<<<<<<< HEAD
+            // $homeController->home();
+
+            break;
+        case 'login':
+            $userController->login();
+            // $homeController->home();
+
+=======
+            break;
+        case 'login':
+            $userController->login();
+>>>>>>> origin/test_admin
+            break;
+        case 'logout':
+            $userController->logout();
+            break;
+        case 'users':
+            $userController->showAllUsers();
+            break;
+<<<<<<< HEAD
+        case 'home':
+            $homeController->home();
+            break;
+        default:
+            // $userController->register();
+            $homeController->home();
+            break;
+=======
+        case 'home': 
+            $homeController->home();
+            break;
+        default:
+            $homeController->home(); 
+>>>>>>> origin/test_admin
+    }
+} elseif (isset($_GET['del'])) {
+    $userController->deleteUser();
+} else {
+<<<<<<< HEAD
+    $homeController->home();
+=======
+    $homeController->home();  
+>>>>>>> origin/test_admin
 }

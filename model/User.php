@@ -21,7 +21,7 @@ class User
             ':password' => $hashedPassword,
             ':username' => $username
         ]);
-        echo "✅ User registered successfully!<br>";
+        // echo "✅ User registered successfully!<br>";
         return $stmt->rowCount() > 0;
     } catch (PDOException $e) {
         echo "❌ Database error: " . $e->getMessage();
@@ -41,4 +41,19 @@ class User
         }
         return false;
     }
+
+    
+  public function getAllusers()
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM users");
+        $stmt->execute();
+         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+public function deleteUser($user_id)
+{
+    // First, delete the user from the database
+    $stmt = $this->pdo->prepare("DELETE FROM users WHERE user_id = :id");
+    $stmt->bindParam(':id', $user_id, PDO::PARAM_INT);
+    return $stmt->execute();
+}
 }
