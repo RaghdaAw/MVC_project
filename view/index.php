@@ -25,35 +25,34 @@
     <div>
 
 
-<?php
-$myUsers = new User($pdo); 
-$users = $myUsers->getAllusers();
-?>
-<nav>       
-    <ul>
-        <li><a href="../view/index.php?page=users">Users</a></li>
-        <li><a href="../view/index.php?page=books">Books</a></li>
-        <li><a href="../view/addbook.php">Add Book</a></li>
-        <!-- <li><a href="../view/adduser.php">Add User</a></li> -->
-    </ul>
-</nav>
-<h2>User Details</h2>
-<?php foreach ($users as $row): ?>
-    <div class="user-item">
-        <p><strong>ID:</strong> <?= $row['user_id']; ?></p>
-        <p><strong>First Name:</strong> <?= $row['firstname']; ?></p>
-        <p><strong>Last Name:</strong> <?= $row['lastname']; ?></p>
-        <p><strong>Username:</strong> <?= $row['username']; ?></p>
+        <?php
+        $myUsers = new User($pdo);
+        $users = $myUsers->getAllusers();
+        ?>
+        <nav>
+            <ul>
+                <li><a href="../view/index.php?page=users">Users</a></li>
+                <li><a href="../view/index.php?page=books">Books</a></li>
+                <li><a href="../view/addbook.php">Add Book</a></li>
+                <!-- <li><a href="../view/adduser.php">Add User</a></li> -->
+            </ul>
+        </nav>
+        <h2>User Details</h2>
+        <?php foreach ($users as $row): ?>
+            <div class="user-item">
+                <p><strong>ID:</strong> <?= $row['user_id']; ?></p>
+                <p><strong>First Name:</strong> <?= $row['firstname']; ?></p>
+                <p><strong>Last Name:</strong> <?= $row['lastname']; ?></p>
+                <p><strong>Username:</strong> <?= $row['username']; ?></p>
 
-        <a href="../controller/UserController.php?del=<?= $row['user_id']; ?>" 
-           onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟');" 
-           class="delete-button">
-            <i class="fa-solid fa-xmark delete"></i> <span>Delete User</span>
-        </a>
+                <a href="../controller/UserController.php?del=<?= $row['user_id']; ?>"
+                    onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟');" class="delete-button">
+                    <i class="fa-solid fa-xmark delete"></i> <span>Delete User</span>
+                </a>
 
-        <hr>
-    </div>
-<?php endforeach; ?>
+                <hr>
+            </div>
+        <?php endforeach; ?>
 
 
 
@@ -61,11 +60,11 @@ $users = $myUsers->getAllusers();
 
         $myBooks = new Book($pdo);
         $books = $myBooks->getAllBooks();
-        
+
         ?>
-            <h1>Book Details</h1>
+        <h1>Book Details</h1>
         <?php foreach ($books as $row): ?>
-            <div class="book-item" >
+            <div class="book-item">
                 <p><strong>ID:</strong> <?= $row['product_id']; ?></p>
                 <p><strong>Name:</strong> <?= $row['name']; ?></p>
                 <p><strong>Author:</strong> <?= $row['author']; ?></p>
@@ -81,21 +80,25 @@ $users = $myUsers->getAllusers();
                     onclick="return confirm('Are you sure?');" class="delete-button">
                     <i class="fa-solid fa-xmark delete"></i> <span>deletet</span>
                 </a>
+                <a href="../controller/BookController.php?edit=<?= $row['product_id']; ?>" class="edit-button">
+                    <i class="fa-regular fa-pen-to-square edit"></i> <span>edit</span>
+                </a>
 
-                <hr>
+
+
             </div>
         <?php endforeach; ?>
         <?php
         $bookController = new BookController($pdo);
-        
+
         $page = $_GET['page'] ?? 'books';
-        
-//         if ($page === 'books') {
+
+        //         if ($page === 'books') {
 //     $bookController->showAllBooks();
 // }
 // ?>
 
-        
+
         <!-- Header -->
         <!-- <header id="header">
         <div class="inner">

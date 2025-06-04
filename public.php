@@ -1,10 +1,12 @@
 <?php
 require_once 'model/dbConnect.php';
 require_once 'controller/UserController.php';
-require_once 'controller/HomeController.php'; 
+require_once 'controller/BookController.php';
+
+// require_once 'controller/HomeController.php';
 
 $userController = new UserController($pdo);
-
+$bookController = new BookController($pdo);
 
 if (isset($_GET['page'])) {
     switch ($_GET['page']) {
@@ -20,8 +22,10 @@ if (isset($_GET['page'])) {
         case 'users':
             $userController->showAllUsers();
             break;
-        
+        case 'updateBook':
+            $bookController->updateBook(); 
+            break;
     }
 } elseif (isset($_GET['del'])) {
     $userController->deleteUser();
-} 
+}

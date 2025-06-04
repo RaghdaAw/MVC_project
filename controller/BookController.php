@@ -4,6 +4,11 @@ include_once '../model/Book.php';
 class BookController
 {
     private $bookModel;
+    public function getBookById($id)
+{
+    return $this->bookModel->getBookById($id);
+}
+
 
     public function __construct($pdo)
     {
@@ -51,11 +56,42 @@ public function deleteBook()
         }
         
     }
-    // public function showAllBooks()
-    // {
-    //     $books = $this->bookModel->getAllBooks();
-    //     include '../view/index.php'; // الملف الذي يحتوي على HTML
-    // }
+   public function updateBook()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
+        $id = $_POST['id'];
+        $image_url = $_POST['old_image'] ?? null; // صورة قديمة إذا لم تُرفع صورة جديدة
+
+        if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
+            $dir = "../view/uploadImages/";
+            if (!file_exists($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $unique_name = time() . "_" . basename($_FILES["image"]["name"]);
+            $target_file = $dir . $unique_name;
+
+            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+                $image_url = $target_file;
+            }
+        }
+
+        $this->bookModel->updateBook(
+            $id,
+            $_POST['name'],
+            $_POST['author'],
+            $_POST['year'],
+            $_POST['price'],
+            $_POST['description'],
+            $image_url
+        );
+
+        echo "✅ Book updated successfully!";
+        header("Location: view/index.php");
+        exit;
+    }
+}
+
 }
  if (isset($_POST['submit'])) {
         require_once '../model/dbConnect.php';
@@ -67,4 +103,17 @@ if (isset($_GET['del'])) {
     require_once '../model/dbConnect.php';
     $controller = new BookController($pdo);
     $controller->deleteBook();
+}
+
+if (isset($_GET['edit'])) {
+    require_once '../model/dbConnect.php';
+    $controller = new BookController($pdo);
+    $id = intval($_GET['edit']);
+    $book = $controller->getBookById($id);
+
+    if ($book) {
+        include '../view/editBook.php'; 
+    } else {
+        echo "❌ Book not found.";
+    }
 }

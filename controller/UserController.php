@@ -79,7 +79,7 @@ class UserController
     }
 }
 
-// معالجة الطلب مباشرة من الرابط
+
 
 $controller = new UserController($pdo);
 
@@ -89,8 +89,6 @@ if (isset($_GET['page']) && $_GET['page'] === 'users') {
 } elseif (isset($_GET['del'])) {
     $controller->deleteUser();
 }
-
-// معالجة الطلب مباشرة من الرابط
 
 $controller = new UserController($pdo);
 
