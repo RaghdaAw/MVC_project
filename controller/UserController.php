@@ -12,22 +12,6 @@ class UserController
     }
     public function register()
     {
-<<<<<<< HEAD
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstname = $_POST['firstname'] ?? '';
-            $lastname = $_POST['lastname'] ?? '';
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
-            echo "test raghda";
-
-            if ($this->userModel->register($firstname, $lastname, $password, $username)) {
-                // echo "✅ User registered successfully!";
-                header("Location: view/login.php"); // ✅ إعادة التوجيه بعد التسجيل
-                exit;
-
-
-=======
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'] ?? '';
@@ -36,24 +20,17 @@ class UserController
 
             if ($this->userModel->register($firstname, $lastname, $password, $username)) {
                 echo "✅ User registered successfully!";
+           header("Location: view/login.php");
+
             exit;
->>>>>>> origin/test_admin
             } else {
                 echo "❌ Failed to register user.";
             }
         } else {
-<<<<<<< HEAD
-
-            //    header("Location: view/register.php");
-            exit;
-        }
-
-=======
             // استعرض الفورم إن لم يكن POST
-           header("Location: ../view/register.php");
+           header("Location: view/register.php");
             exit;
         }
->>>>>>> origin/test_admin
     }
     public function login()
     {
@@ -65,18 +42,14 @@ class UserController
             if ($user) {
                 session_start();
                 $_SESSION['user'] = $user;
-                header("Location: ../view/index.php");
+                header("Location: view/index.php");
                 exit;
             } else {
                 echo "❌ Invalid username or password.";
             }
         } else {
             // استعرض الفورم إن لم يكن POST
-<<<<<<< HEAD
-            // include __DIR__ . 'view/login.php';
-=======
-            include __DIR__ . '/../view/login.php';
->>>>>>> origin/test_admin
+            include __DIR__ . 'view/login.php';
         }
     }
     public function logout()
@@ -84,7 +57,7 @@ class UserController
         session_start();
         session_unset();
         session_destroy();
-        header("Location: ../view/login.php");
+        header("Location: view/login.php");
         exit;
     }
     public function showAllUsers()
@@ -104,8 +77,6 @@ class UserController
             exit;
         }
     }
-<<<<<<< HEAD
-=======
 }
 
 // معالجة الطلب مباشرة من الرابط
@@ -117,7 +88,6 @@ if (isset($_GET['page']) && $_GET['page'] === 'users') {
     $controller->showAllUsers();
 } elseif (isset($_GET['del'])) {
     $controller->deleteUser();
->>>>>>> origin/test_admin
 }
 
 // معالجة الطلب مباشرة من الرابط
