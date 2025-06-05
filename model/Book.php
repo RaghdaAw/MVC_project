@@ -49,7 +49,7 @@ class Book
     }
 public function updateBook($product_id, $name, $author, $year, $price, $description, $image_url)
 {
-    $stmt = $this->pdo->prepare(query:"
+    $stmt = $this->pdo->prepare("
         UPDATE product SET name = :name, author = :author, year = :year,
                          price = :price, description = :description, image_url = :image_url
         WHERE product_id = :product_id

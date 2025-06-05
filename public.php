@@ -22,9 +22,9 @@ if (isset($_GET['page'])) {
         case 'users':
             $userController->showAllUsers();
             break;
-        case 'updateBook':
-            $bookController->updateBook(); 
-            break;
+        // case 'updateBook':
+        //     $bookController->updateBook(); 
+        //     break;
     }
 } elseif (isset($_GET['del'])) {
     $userController->deleteUser();
