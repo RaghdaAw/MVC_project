@@ -2,8 +2,10 @@
 require_once 'model/dbConnect.php';
 require_once 'controller/UserController.php';
 require_once 'controller/HomeController.php';
+//require_once 'controller/AdminController.php';
 
 $userController = new UserController($pdo);
+//$adminController = new AdminController($pdo);
 // $homeController = new HomeController();
 
 if (isset($_GET['page'])) {
