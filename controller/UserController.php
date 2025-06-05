@@ -12,11 +12,22 @@ class UserController
     }
     public function register()
     {
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'] ?? '';
             $username = $_POST['username'] ?? '';
             $password = $_POST['password'] ?? '';
+
+            echo "test raghda";
+
+            if ($this->userModel->register($firstname, $lastname, $password, $username)) {
+                // echo "✅ User registered successfully!";
+                header("Location: view/login.php"); // ✅ إعادة التوجيه بعد التسجيل
+                exit;
+
+
+
 
             if ($this->userModel->register($firstname, $lastname, $password, $username)) {
                 echo "✅ User registered successfully!";
@@ -26,7 +37,7 @@ class UserController
             } else {
                 echo "❌ Failed to register user.";
             }
-        } else {
+        } else 
             // استعرض الفورم إن لم يكن POST
            header("Location: view/register.php");
             exit;
@@ -49,7 +60,9 @@ class UserController
             }
         } else {
             // استعرض الفورم إن لم يكن POST
+
             include __DIR__ . 'view/login.php';
+
         }
     }
     public function logout()
@@ -80,6 +93,9 @@ class UserController
 }
 
 
+// معالجة الطلب مباشرة من الرابط
+
+
 
 $controller = new UserController($pdo);
 
@@ -89,6 +105,7 @@ if (isset($_GET['page']) && $_GET['page'] === 'users') {
 } elseif (isset($_GET['del'])) {
     $controller->deleteUser();
 }
+
 
 $controller = new UserController($pdo);
 

@@ -20,6 +20,7 @@
     // include '../model/Book.php';
     include '../controller/BookController.php';
     include '../controller/UserController.php';
+    include '../controller/AdminController.php';
 
     ?>
     <div>
