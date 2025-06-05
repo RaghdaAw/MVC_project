@@ -47,5 +47,29 @@ class Book
         $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
         return $stmt->execute();
     }
+public function updateBook($product_id, $name, $author, $year, $price, $description, $image_url)
+{
+    $stmt = $this->pdo->prepare("
+        UPDATE product SET name = :name, author = :author, year = :year,
+                         price = :price, description = :description, image_url = :image_url
+        WHERE product_id = :product_id
+    ");
+    return $stmt->execute([
+        ':product_id' => $product_id,
+        ':name' => $name,
+        ':author' => $author,
+        ':year' => $year,
+        ':price' => $price,
+        ':description' => $description,
+        ':image_url' => $image_url
+    ]);
+}
+public function getBookById($product_id)
+{
+    $stmt = $this->pdo->prepare("SELECT * FROM product WHERE product_id = :product_id");
+    $stmt->execute([':product_id' => $product_id]);
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
 
 }

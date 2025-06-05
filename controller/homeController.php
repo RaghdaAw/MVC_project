@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 class HomeController
 {
@@ -9,3 +10,5 @@ class HomeController
                 exit;
     }
 }
+=======
+>>>>>>> test_admin

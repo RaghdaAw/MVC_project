@@ -12,12 +12,16 @@ class UserController
     }
     public function register()
     {
+<<<<<<< HEAD
 
+=======
+>>>>>>> test_admin
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname = $_POST['firstname'] ?? '';
             $lastname = $_POST['lastname'] ?? '';
             $username = $_POST['username'] ?? '';
             $password = $_POST['password'] ?? '';
+<<<<<<< HEAD
             echo "test raghda";
 
             if ($this->userModel->register($firstname, $lastname, $password, $username)) {
@@ -26,15 +30,30 @@ class UserController
                 exit;
 
 
+=======
+
+            if ($this->userModel->register($firstname, $lastname, $password, $username)) {
+                echo "✅ User registered successfully!";
+           header("Location: view/login.php");
+
+            exit;
+>>>>>>> test_admin
             } else {
                 echo "❌ Failed to register user.";
             }
         } else {
+<<<<<<< HEAD
 
             //    header("Location: view/register.php");
             exit;
         }
 
+=======
+            // استعرض الفورم إن لم يكن POST
+           header("Location: view/register.php");
+            exit;
+        }
+>>>>>>> test_admin
     }
     public function login()
     {
@@ -53,7 +72,11 @@ class UserController
             }
         } else {
             // استعرض الفورم إن لم يكن POST
+<<<<<<< HEAD
             // include __DIR__ . 'view/login.php';
+=======
+            include __DIR__ . 'view/login.php';
+>>>>>>> test_admin
         }
     }
     public function logout()
@@ -61,7 +84,7 @@ class UserController
         session_start();
         session_unset();
         session_destroy();
-        header("Location: ../view/login.php");
+        header("Location: view/login.php");
         exit;
     }
     public function showAllUsers()
@@ -83,7 +106,20 @@ class UserController
     }
 }
 
+<<<<<<< HEAD
 // معالجة الطلب مباشرة من الرابط
+=======
+
+
+$controller = new UserController($pdo);
+
+if (isset($_GET['page']) && $_GET['page'] === 'users') {
+    // include_once '../model/dbConnect.php';
+    $controller->showAllUsers();
+} elseif (isset($_GET['del'])) {
+    $controller->deleteUser();
+}
+>>>>>>> test_admin
 
 $controller = new UserController($pdo);
 
