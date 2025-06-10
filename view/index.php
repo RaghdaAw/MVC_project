@@ -17,49 +17,91 @@
 
 <body class="is-preload">
     <?php
-    include '../model/Book.php';
+    // include '../model/Book.php';
+    include '../controller/BookController.php';
+    include '../controller/UserController.php';
+    include '../controller/AdminController.php';
+
     ?>
     <div>
-<?php
 
-$myBooks = new Book($pdo);
-$books = $myBooks->getAllBooks();
-?>
 
-<?php foreach ($books as $row): ?>
-    <div class="book-item">
-        <p><strong>ID:</strong> <?= $row['product_id']; ?></p>
-        <p><strong>Name:</strong> <?= $row['name']; ?></p>
-        <p><strong>Author:</strong> <?= $row['author']; ?></p>
-        <p><strong>Year:</strong> <?= $row['year']; ?></p>
-        <p><strong>Price:</strong> <?= $row['price']; ?></p>
-        <p><strong>Description:</strong> <?= $row['description']; ?></p>
+        <?php
+        $myUsers = new User($pdo);
+        $users = $myUsers->getAllusers();
+        ?>
+        <nav>
+            <ul>
+                <li><a href="../view/index.php?page=users">Users</a></li>
+                <li><a href="../view/index.php?page=books">Books</a></li>
+                <li><a href="../view/addbook.php">Add Book</a></li>
+                <!-- <li><a href="../view/adduser.php">Add User</a></li> -->
+            </ul>
+        </nav>
+        <h2>User Details</h2>
+        <?php foreach ($users as $row): ?>
+            <div class="user-item">
+                <p><strong>ID:</strong> <?= $row['user_id']; ?></p>
+                <p><strong>First Name:</strong> <?= $row['firstname']; ?></p>
+                <p><strong>Last Name:</strong> <?= $row['lastname']; ?></p>
+                <p><strong>Username:</strong> <?= $row['username']; ?></p>
 
-        <?php if (!empty($row['image_url'])): ?>
-            <p><img src="<?= $row['image_url']; ?>" alt="Book Image" style="width:100px;height:auto;"></p>
-        <?php endif; ?>
+                <a href="../controller/UserController.php?del=<?= $row['user_id']; ?>"
+                    onclick="return confirm('هل أنت متأكد من حذف هذا المستخدم؟');" class="delete-button">
+                    <i class="fa-solid fa-xmark delete"></i> <span>Delete User</span>
+                </a>
 
-        <a href="../controller/admin_delete_book.php?del=<?= $row['product_id']; ?>" 
-           onclick="return confirm('هل أنت متأكد من حذف هذا الكتاب؟');" 
-           class="delete-button">
-            <i class="fa-solid fa-xmark delete"></i> <span>deletet</span>
-        </a>
+                <hr>
+            </div>
+        <?php endforeach; ?>
 
-        <hr>
-    </div>
-<?php endforeach; ?>
 
-<?php
-    // $row = $selectPost->fetch(PDO::FETCH_ASSOC);
-    // $post_text = $row['post_content'];
-    // $post_date = $row['post_date'];
-    // $post_img = $row['upload_image'];
-    // $user_name = $row['Username'];
-    // $post_id = $row['post_id'];
-    // $user_id = $row['user_id'];
-    ?>
-    <!-- Header -->
-    <!-- <header id="header">
+
+        <?php
+
+        $myBooks = new Book($pdo);
+        $books = $myBooks->getAllBooks();
+
+        ?>
+        <h1>Book Details</h1>
+        <?php foreach ($books as $row): ?>
+            <div class="book-item">
+                <p><strong>ID:</strong> <?= $row['product_id']; ?></p>
+                <p><strong>Name:</strong> <?= $row['name']; ?></p>
+                <p><strong>Author:</strong> <?= $row['author']; ?></p>
+                <p><strong>Year:</strong> <?= $row['year']; ?></p>
+                <p><strong>Price:</strong> <?= $row['price']; ?></p>
+                <p><strong>Description:</strong> <?= $row['description']; ?></p>
+
+                <?php if (!empty($row['image_url'])): ?>
+                    <p><img src="<?= $row['image_url']; ?>" alt="Book Image" style="width:100px;height:auto;"></p>
+                <?php endif; ?>
+
+                <a href="../controller/BookController.php?del=<?= $row['product_id']; ?>"
+                    onclick="return confirm('Are you sure?');" class="delete-button">
+                    <i class="fa-solid fa-xmark delete"></i> <span>deletet</span>
+                </a>
+                <a href="../controller/BookController.php?edit=<?= $row['product_id']; ?>" class="edit-button">
+                    <i class="fa-regular fa-pen-to-square edit"></i> <span>edit</span>
+                </a>
+
+
+
+            </div>
+        <?php endforeach; ?>
+        <?php
+        $bookController = new BookController($pdo);
+
+        $page = $_GET['page'] ?? 'books';
+
+        //         if ($page === 'books') {
+//     $bookController->showAllBooks();
+// }
+// ?>
+
+
+        <!-- Header -->
+        <!-- <header id="header">
         <div class="inner">
             <a href="#" class="image avatar"><img src="images/cookie.png" alt="" /></a>
             <h1><strong>Welcome,</strong><br />
@@ -69,11 +111,11 @@ $books = $myBooks->getAllBooks();
         </div>
     </header> -->
 
-    <!-- Main -->
-    <!-- <div id="main"> -->
+        <!-- Main -->
+        <!-- <div id="main"> -->
 
-    <!-- One -->
-    <!-- <section id="one">
+        <!-- One -->
+        <!-- <section id="one">
             <header class="major">
                 <i class="fa-solid fa-heart"></i>
                 <i class="fa-solid fa-cart-plus"></i>
@@ -89,8 +131,8 @@ $books = $myBooks->getAllBooks();
             </ul>
         </section> -->
 
-    <!-- Two -->
-    <!-- <section id="two">
+        <!-- Two -->
+        <!-- <section id="two">
 
             <h2>Recent Work</h2>
             <div class="row">
@@ -133,8 +175,8 @@ $books = $myBooks->getAllBooks();
             </ul>
         </section> -->
 
-    <!-- Three -->
-    <!-- <section id="three">
+        <!-- Three -->
+        <!-- <section id="three">
             <h2>Get In Touch</h2>
             <p>Accumsan pellentesque commodo blandit enim arcu non at amet id arcu magna. Accumsan orci faucibus id eu
                 lorem semper nunc nisi lorem vulputate lorem neque lorem ipsum dolor.</p>
@@ -177,8 +219,8 @@ $books = $myBooks->getAllBooks();
 
     </div> -->
 
-    <!-- Footer -->
-    <!-- <footer id="footer">
+        <!-- Footer -->
+        <!-- <footer id="footer">
         <div class="inner">
             <ul class="icons">
                 <li><a href="#" class="icon brands fa-twitter"><span class="label">Twitter</span></a></li>
@@ -192,8 +234,8 @@ $books = $myBooks->getAllBooks();
         </div>
     </footer> -->
 
-    <!-- Scripts -->
-    <!-- <script src="assets/js/jquery.min.js"></script>
+        <!-- Scripts -->
+        <!-- <script src="assets/js/jquery.min.js"></script>
     <script src="assets/js/jquery.poptrox.min.js"></script>
     <script src="assets/js/browser.min.js"></script>
     <script src="assets/js/breakpoints.min.js"></script>
