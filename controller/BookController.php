@@ -1,28 +1,30 @@
 <?php
-include "../model/dbConnect.php";
-include '../model/Book.php';
+// controllers/BookController.php
+
+include_once __DIR__ . '/../model/Book.php';
+include_once __DIR__ . '/../view/book/BookView.php';
 
 class BookController
 {
-    private $bookModel;
-
-    public function __construct($pdo)
+    public static function showAll()
     {
-        $this->bookModel = new Book($pdo);
+        $bookModel = new Book($GLOBALS['pdo']);
+        $books = $bookModel->getAllBooks();
+        BookView::renderBookList($books);
     }
 
-    public function getBookById($id)
+    public static function add()
     {
-        return $this->bookModel->getBookById($id);
-    }
+        // عرض نموذج الإضافة دائماً قبل المعالجة
+        BookView::renderAddForm();
 
-    public function addBook()
-    {
-        if (isset($_POST['submit'])) {
+        // معالجة البيانات إذا تم الإرسال
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+            $bookModel = new Book($GLOBALS['pdo']);
             $image_url = null;
 
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                $dir = "../view/uploadImages/";
+                $dir = __DIR__ . '/../views/uploadImages/';
                 if (!file_exists($dir)) {
                     mkdir($dir, 0777, true);
                 }
@@ -31,11 +33,12 @@ class BookController
                 $target_file = $dir . $unique_name;
 
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                    $image_url = $target_file;
+                    $image_url = 'views/uploadImages/' . $unique_name;
                 }
             }
 
-            $this->bookModel->insertBook(
+            // إدخال البيانات
+            $bookModel->insertBook(
                 $_POST['name'],
                 $_POST['author'],
                 $_POST['year'],
@@ -44,79 +47,91 @@ class BookController
                 $image_url
             );
 
-            header("Location: ../view/index.php");
+            // إعادة التوجيه إلى صفحة عرض الكتب
+            header("Location: public.php?page=books");
+            exit;
+        }
+
+    }
+
+    public static function delete()
+    {
+        if (isset($_GET['id'])) {
+            $bookModel = new Book($GLOBALS['pdo']);
+            $bookModel->deleteBook($_GET['id']);
+            header("Location: public.php?page=books");
             exit;
         }
     }
 
-    public function deleteBook()
+    public static function edit()
     {
-        if (isset($_GET['del'])) {
-            $id = intval($_GET['del']);
-            $this->bookModel->deleteBook($id);
-            header("Location: ../view/index.php");
-            exit;
+        if (!isset($_GET['id'])) {
+            echo "⛔ Book ID is missing.";
+            return;
         }
+
+        $bookModel = new Book($GLOBALS['pdo']);
+        $book = $bookModel->getBookById($_GET['id']);
+
+        if (!$book) {
+            echo "⛔ Book not found.";
+            return;
+        }
+
+        BookView::renderEditForm($book);
     }
 
-    public function updateBook()
-    {
-        echo "Updating book...";
-        if (isset($_POST['update'])) {
-            $id = $_POST['id'];
-            $image_url = $_POST['old_image'] ?? null;
 
+    public static function update()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
+            $bookModel = new Book($GLOBALS['pdo']);
+
+            $product_id = $_POST['id'];
+            $name = $_POST['name'];
+            $author = $_POST['author'];
+            $year = $_POST['year'];
+            $price = $_POST['price'];
+            $description = $_POST['description'];
+            $old_image = $_POST['old_image'];
+            $image_url = $old_image;
+
+            // معالجة الصورة الجديدة إذا تم رفعها
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                $dir = "../view/uploadImages/";
+                $dir = __DIR__ . '/../views/uploadImages/';
                 if (!file_exists($dir)) {
                     mkdir($dir, 0777, true);
+                }
+
+                // حذف الصورة القديمة إذا وُجدت
+                if (!empty($old_image) && file_exists($old_image)) {
+                    unlink($old_image);
                 }
 
                 $unique_name = time() . "_" . basename($_FILES["image"]["name"]);
                 $target_file = $dir . $unique_name;
 
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                    $image_url = $target_file;
+                    $image_url = 'views/uploadImages/' . $unique_name;
                 }
             }
 
-            $this->bookModel->updateBook(
-                $id,
-                $_POST['name'],
-                $_POST['author'],
-                $_POST['year'],
-                $_POST['price'],
-                $_POST['description'],
-                $image_url
-            );
+            // تنفيذ التحديث
+            $bookModel->updateBook($product_id, $name, $author, $year, $price, $description, $image_url);
 
-            header("Location: ../view/index.php");
+            header("Location: public.php?page=books");
             exit;
         }
     }
-}
-
-// تنفيذ العمليات حسب الطلب:
-$controller = new BookController($pdo);
-
-if (isset($_POST['submit'])) {
-    $controller->addBook();
-}
-
-if (isset($_GET['del'])) {
-    $controller->deleteBook();
-}
-
-if (isset($_GET['edit'])) {
-    $id = intval($_GET['edit']);
-    $book = $controller->getBookById($id);
-
-    if ($book) {
-        include '../view/editBook.php';
-    } else {
-        echo "❌ Book not found.";
+    public static function showUserBooks()
+    {
+        $bookModel = new Book($GLOBALS['pdo']);
+        $books = $bookModel->getAllBooks();
+        include_once __DIR__ . '/../view/book/BookView.php';
+        BookView::renderUserBookList($books);
     }
+
 }
-if (isset($_POST['update'])) {
-    $controller->updateBook();
-}
+
+
