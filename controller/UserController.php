@@ -1,118 +1,108 @@
 <?php
-// include_once '../model/dbConnect.php';
-include_once __DIR__ . '/../model/dbConnect.php';
-include_once __DIR__ . '/../model/User.php';
+include_once __DIR__ . '/../model/UserModel.php';
+include_once __DIR__ . '/../view/user/UserView.php';
+
 class UserController
 {
-    private $userModel;
-
-    public function __construct($pdo)
+    public static function handleRegister()
     {
-        $this->userModel = new User($pdo);
-    }
-    public function register()
-    {
+        echo "<h1>Register</h1>";
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstname = $_POST['firstname'] ?? '';
-            $lastname = $_POST['lastname'] ?? '';
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
+            $firstname = trim($_POST['firstname'] ?? '');
+            $lastname = trim($_POST['lastname'] ?? '');
+            $username = trim($_POST['username'] ?? '');
+            $password = trim($_POST['password'] ?? '');
 
-            echo "test raghda";
-
-            if ($this->userModel->register($firstname, $lastname, $password, $username)) {
-                // echo "✅ User registered successfully!";
-                header("Location: view/login.php"); // ✅ إعادة التوجيه بعد التسجيل
-                exit;
-
-
-
-
-            if ($this->userModel->register($firstname, $lastname, $password, $username)) {
-                echo "✅ User registered successfully!";
-           header("Location: view/login.php");
-
-            exit;
-            } else {
-                echo "❌ Failed to register user.";
+            if ($firstname === '' || $lastname === '' || $username === '' || $password === '') {
+                echo "❌ جميع الحقول مطلوبة.";
+                UserView::renderRegister();
+                return;
             }
-        } else 
-            // استعرض الفورم إن لم يكن POST
-           header("Location: view/register.php");
-            exit;
-        }
-    }
-    public function login()
-    {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'] ?? '';
-            $password = $_POST['password'] ?? '';
 
-            $user = $this->userModel->login($username, $password);
-            if ($user) {
-                session_start();
-                $_SESSION['user'] = $user;
-                header("Location: view/index.php");
+            $success = UserModel::register($firstname, $lastname, $password, $username);
+
+            if ($success) {
+                header("Location: public.php?page=login");
                 exit;
             } else {
-                echo "❌ Invalid username or password.";
+                echo "❌ فشل في التسجيل. قد يكون اسم المستخدم مستخدمًا من قبل.";
+                UserView::renderRegister();
             }
         } else {
-            // استعرض الفورم إن لم يكن POST
-
-            include __DIR__ . 'view/login.php';
-
+            UserView::renderRegister();
         }
     }
-    public function logout()
+
+    public static function handleLogin()
     {
-        session_start();
-        session_unset();
-        session_destroy();
-        header("Location: view/login.php");
-        exit;
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
+            $username = trim($_POST['username'] ?? '');
+            $password = trim($_POST['password'] ?? '');
+
+            if ($username === '' || $password === '') {
+                echo "❌ اسم المستخدم وكلمة المرور مطلوبة.";
+                // UserView::renderLogin();
+                return;
+            }
+
+            $user = UserModel::login($username, $password);
+
+            if ($user) {
+                if (session_status() === PHP_SESSION_NONE) {
+                    session_start();
+                   
+
+                }
+
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['username'] = $user['username'];
+                $_SESSION['role'] = $user['role'];
+                
+                 
+               
+                if ($user['role'] !== 'admin') {
+                    header("Location: public.php?page=userDashboard ");
+                } else {
+                    header(
+                        "Location: public.php?page=books"
+                    );
+
+                }
+                exit;
+            } else {
+                echo "<p style='color:red;'>❌ اسم المستخدم أو كلمة المرور غير صحيحة.</p>";
+                UserView::renderLogin();
+            }
+        } else {
+            UserView::renderLogin();
+        }
     }
-    public function showAllUsers()
+
+
+    public static function logout()
     {
-        $users = $this->userModel->getAllusers();
-        // include '../view/index.php';
-        header("Location: ../view/index.php");
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        session_destroy();
+        header("Location: public.php?page=login");
         exit;
     }
 
-    public function deleteUser()
+    public static function showAll()
+    {
+        $users = UserModel::getAllUsers();
+        UserView::renderUserList($users);
+    }
+
+    public static function delete()
     {
         if (isset($_GET['del'])) {
-            $id = intval($_GET['del']);
-            $this->userModel->deleteUser($id);
-            header("Location: ../view/index.php");
+            UserModel::deleteUser((int) $_GET['del']);
+            header("Location: public.php?page=users");
             exit;
         }
     }
 }
-
-
-// معالجة الطلب مباشرة من الرابط
-
-
-
-$controller = new UserController($pdo);
-
-if (isset($_GET['page']) && $_GET['page'] === 'users') {
-    // include_once '../model/dbConnect.php';
-    $controller->showAllUsers();
-} elseif (isset($_GET['del'])) {
-    $controller->deleteUser();
-}
-
-
-$controller = new UserController($pdo);
-
-if (isset($_GET['page']) && $_GET['page'] === 'users') {
-    // include_once '../model/dbConnect.php';
-    $controller->showAllUsers();
-} elseif (isset($_GET['del'])) {
-    $controller->deleteUser();
-}
-
