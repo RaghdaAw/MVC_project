@@ -8,6 +8,32 @@ class UserModel
     {
         self::$pdo = $pdo;
     }
+    public static function registerAdmin($firstname, $lastname, $password, $username)
+    {
+        try {
+            $stmt = self::$pdo->prepare("SELECT user_id FROM users WHERE username = :username");
+            $stmt->execute([':username' => $username]);
+
+            if ($stmt->fetch()) {
+                return false;
+            }
+
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+            $stmt = self::$pdo->prepare("
+            INSERT INTO users (firstname, lastname, password, username, role)
+            VALUES (:firstname, :lastname, :password, :username, 'admin')
+        ");
+            $stmt->execute([
+                ':firstname' => $firstname,
+                ':lastname' => $lastname,
+                ':password' => $hashedPassword,
+                ':username' => $username
+            ]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            return false;
+        }
+    }
 
     public static function register($firstname, $lastname, $password, $username)
     {

@@ -15,10 +15,9 @@ class BookController
 
     public static function add()
     {
-        // عرض نموذج الإضافة دائماً قبل المعالجة
+
         BookView::renderAddForm();
 
-        // معالجة البيانات إذا تم الإرسال
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             $bookModel = new Book($GLOBALS['pdo']);
             $image_url = null;
@@ -37,7 +36,7 @@ class BookController
                 }
             }
 
-            // إدخال البيانات
+            // Insert the book into the database
             $bookModel->insertBook(
                 $_POST['name'],
                 $_POST['author'],
@@ -46,8 +45,7 @@ class BookController
                 $_POST['description'],
                 $image_url
             );
-
-            // إعادة التوجيه إلى صفحة عرض الكتب
+            // Redirect to the book list page
             header("Location: public.php?page=books");
             exit;
         }
@@ -97,14 +95,14 @@ class BookController
             $old_image = $_POST['old_image'];
             $image_url = $old_image;
 
-            // معالجة الصورة الجديدة إذا تم رفعها
+            // new image upload logic
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
                 $dir = __DIR__ . '/../views/uploadImages/';
                 if (!file_exists($dir)) {
                     mkdir($dir, 0777, true);
                 }
 
-                // حذف الصورة القديمة إذا وُجدت
+                // delete old image if exists
                 if (!empty($old_image) && file_exists($old_image)) {
                     unlink($old_image);
                 }
@@ -117,7 +115,7 @@ class BookController
                 }
             }
 
-            // تنفيذ التحديث
+            // Update the book in the database 
             $bookModel->updateBook($product_id, $name, $author, $year, $price, $description, $image_url);
 
             header("Location: public.php?page=books");
