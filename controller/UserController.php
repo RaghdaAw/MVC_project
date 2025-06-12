@@ -4,6 +4,21 @@ include_once __DIR__ . '/../view/user/UserView.php';
 
 class UserController
 {
+    public static function createAdminUser()
+    {
+        require_once __DIR__ . '/../model/UserModel.php';
+        $userModel = new UserModel();
+        UserModel::setConnection($GLOBALS['pdo']);
+
+        $result = UserModel::registerAdmin('Admin', 'Super', 'admin123', 'admin');
+
+        if ($result) {
+            echo "✅ Admin created successfully";
+        } else {
+            echo "❌ Failed to create admin. The username may already be in use.";
+        }
+    }
+
     public static function handleRegister()
     {
         echo "<h1>Register</h1>";
@@ -15,7 +30,7 @@ class UserController
             $password = trim($_POST['password'] ?? '');
 
             if ($firstname === '' || $lastname === '' || $username === '' || $password === '') {
-                echo "❌ جميع الحقول مطلوبة.";
+                echo "❌ All fields are required.";
                 UserView::renderRegister();
                 return;
             }
@@ -26,7 +41,7 @@ class UserController
                 header("Location: public.php?page=login");
                 exit;
             } else {
-                echo "❌ فشل في التسجيل. قد يكون اسم المستخدم مستخدمًا من قبل.";
+                echo "❌Registration failed. The username may already be in use.";
                 UserView::renderRegister();
             }
         } else {
@@ -41,7 +56,7 @@ class UserController
             $password = trim($_POST['password'] ?? '');
 
             if ($username === '' || $password === '') {
-                echo "❌ اسم المستخدم وكلمة المرور مطلوبة.";
+                echo "❌ Username and password are required.";
                 // UserView::renderLogin();
                 return;
             }
@@ -51,16 +66,16 @@ class UserController
             if ($user) {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
-                   
+
 
                 }
 
                 $_SESSION['user_id'] = $user['user_id'];
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['role'] = $user['role'];
-                
-                 
-               
+
+
+
                 if ($user['role'] !== 'admin') {
                     header("Location: public.php?page=userDashboard ");
                 } else {
