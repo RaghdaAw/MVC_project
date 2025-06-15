@@ -16,7 +16,24 @@
 </head>
 
 <body class="is-preload">
-
+    <?php
+session_start();
+?>
+<nav id="nav">
+    <ul class="links">
+        <li><a href="public.php?page=home">Home</a></li>
+        <li><a href="public.php?page=books">Books</a></li>
+        <li><a href="public.php?page=userDashboard">User Dashboard</a></li>
+        <?php
+                        if (isset($_SESSION['username'])) {
+                            echo "<div class='name'>Welkom, " . $_SESSION['username'] . "</div>";
+                        } else {
+                            echo "<div class='name'>Login</div>";
+                        }
+                        ?>
+        <li><a href="public.php?page=logout">Logout</a></li>
+    </ul>
+</nav>
         <!-- Header -->
         <!-- <header id="header">
         <div class="inner">

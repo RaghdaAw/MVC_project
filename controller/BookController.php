@@ -1,5 +1,4 @@
 <?php
-// controllers/BookController.php
 
 include_once __DIR__ . '/../model/Book.php';
 include_once __DIR__ . '/../view/book/BookView.php';
@@ -126,7 +125,7 @@ class BookController
     {
         $bookModel = new Book($GLOBALS['pdo']);
         $books = $bookModel->getAllBooks();
-        include_once __DIR__ . '/../view/book/BookView.php';
+        // include_once __DIR__ . '/../view/book/BookView.php';
         BookView::renderUserBookList($books);
     }
 
