@@ -19,7 +19,7 @@ class CartController
         $success = CartModel::addToCart($userId, $productId);
 
         if ($success) {
-            header("Location: public.php?page=cart");
+            header("Location: public.php?page=userDashboard");
             exit;
         } else {
             echo "❌ Failed to add book to cart";
@@ -39,17 +39,18 @@ class CartController
         CartView::renderUserCartList($items);
     }
 
-    public static function delete()
+  public static function delete()
 {
     if (!isset($_GET['idcart']) || !isset($_SESSION['user_id'])) {
         echo "❌ Invalid request.";
         return;
     }
 
+    $cart_id = $_GET['idcart'];
     $user_id = $_SESSION['user_id'];
-    $product_id = $_GET['idcart'];
 
-    $success = CartModel::removeFromCart($user_id, $product_id);
+    $success = CartModel::removeFromCart($user_id, $cart_id);
+
     if ($success) {
         header("Location: public.php?page=cart");
         exit;
@@ -57,5 +58,6 @@ class CartController
         echo "❌ Failed to remove item.";
     }
 }
+
 
 }
