@@ -1,5 +1,4 @@
 <?php
-
 class BookView
 {
     public static function renderBookList($books)
@@ -28,73 +27,79 @@ class BookView
     }
 
     public static function renderAddForm()
-{
-    echo "<h2>➕ add Book </h2>";
-    ?>
-    <form method="POST" action="" enctype="multipart/form-data">
-        <label>📖Name Book:</label><br>
-        <input type="text" name="name" required><br><br>
-
-        <label>✍️ Author:</label><br>
-        <input type="text" name="author" required><br><br>
-
-        <label>📅 Year:</label><br>
-        <input type="number" name="year" required><br><br>
-
-        <label>💰 Price:</label><br>
-        <input type="number" name="price" required><br><br>
-
-        <label>📝 Description:</label><br>
-        <textarea name="description" required></textarea><br><br>
-
-        <label>🖼️ Image:</label><br>
-        <input type="file" name="image"><br><br>
-
-        <input type="submit" name="submit" value="➕ Add Book">
-    </form>
-    <?php
-}
-
-public static function renderEditForm($book)
-{
-    ?>
-    <h2>✏️ Edit Book</h2>
-    <form method="POST" action="public.php?page=updateBook&id=<?= $book['product_id']; ?>" enctype="multipart/form-data">
-        <input type="hidden" name="id" value="<?= $book['product_id'] ?>">
-        <input type="hidden" name="old_image" value="<?= $book['image_url'] ?>">
-
-        <label>Book name</label><br>
-        <input type="text" name="name" value="<?= htmlspecialchars($book['name']) ?>" required><br><br>
-
-        <label>Author:</label><br>
-        <input type="text" name="author" value="<?= htmlspecialchars($book['author']) ?>" required><br><br>
-
-        <label>Year:</label><br>
-        <input type="number" name="year" value="<?= htmlspecialchars($book['year']) ?>" required><br><br>
-
-        <label>Price:</label><br>
-        <input type="number" step="0.01" name="price" value="<?= htmlspecialchars($book['price']) ?>" required><br><br>
-
-        <label>Description:</label><br>
-        <textarea name="description" required><?= htmlspecialchars($book['description']) ?></textarea><br><br>
-
-        <label>Old Image:</label><br>
-        <?php if (!empty($book['image_url'])): ?>
-            <img src="<?= $book['image_url'] ?>" width="150"><br>
-        <?php else: ?>
-            <span>No Image</span><br>
-        <?php endif; ?>
-
-        <label>New Image:</label><br>
-        <input type="file" name="image"><br><br>
-
-        <button type="submit" name="update">Update</button>
-    </form>
-    <?php
-}
-
-public static function renderUserBookList($books)
     {
+        echo "<h2>➕ add Book </h2>";
+        ?>
+        <form method="POST" action="" enctype="multipart/form-data">
+            <label>📖Name Book:</label><br>
+            <input type="text" name="name" required><br><br>
+
+            <label>✍️ Author:</label><br>
+            <input type="text" name="author" required><br><br>
+
+            <label>📅 Year:</label><br>
+            <input type="number" name="year" required><br><br>
+
+            <label>💰 Price:</label><br>
+            <input type="number" name="price" required><br><br>
+
+            <label>📝 Description:</label><br>
+            <textarea name="description" required></textarea><br><br>
+
+            <label>🖼️ Image:</label><br>
+            <input type="file" name="image"><br><br>
+
+            <input type="submit" name="submit" value="➕ Add Book">
+        </form>
+        <?php
+    }
+
+    public static function renderEditForm($book)
+    {
+        ?>
+        <h2>✏️ Edit Book</h2>
+        <form method="POST" action="public.php?page=updateBook&id=<?= $book['product_id']; ?>" enctype="multipart/form-data">
+            <input type="hidden" name="id" value="<?= $book['product_id'] ?>">
+            <input type="hidden" name="old_image" value="<?= $book['image_url'] ?>">
+
+            <label>Book name</label><br>
+            <input type="text" name="name" value="<?= htmlspecialchars($book['name']) ?>" required><br><br>
+
+            <label>Author:</label><br>
+            <input type="text" name="author" value="<?= htmlspecialchars($book['author']) ?>" required><br><br>
+
+            <label>Year:</label><br>
+            <input type="number" name="year" value="<?= htmlspecialchars($book['year']) ?>" required><br><br>
+
+            <label>Price:</label><br>
+            <input type="number" step="0.01" name="price" value="<?= htmlspecialchars($book['price']) ?>" required><br><br>
+
+            <label>Description:</label><br>
+            <textarea name="description" required><?= htmlspecialchars($book['description']) ?></textarea><br><br>
+
+            <label>Old Image:</label><br>
+            <?php if (!empty($book['image_url'])): ?>
+                <img src="<?= $book['image_url'] ?>" width="150"><br>
+            <?php else: ?>
+                <span>No Image</span><br>
+            <?php endif; ?>
+
+            <label>New Image:</label><br>
+            <input type="file" name="image"><br><br>
+
+            <button type="submit" name="update">Update</button>
+        </form>
+        <?php
+    }
+
+    public static function renderUserBookList($books)
+    {
+        if (isset($_SESSION['username'])) {
+            echo "<div class='name'>Welkom, " . $_SESSION['username'] . "</div>";
+        } else {
+            echo "<div class='name'>Login</div>";
+        }
+        
         echo "<h1>📘 Book Details</h1>";
 
         foreach ($books as $row) {
@@ -110,7 +115,7 @@ public static function renderUserBookList($books)
                 echo "<p><img src='{$row['image_url']}' alt='Book Image' style='width:100px;height:auto;'></p>";
             }
 
-            echo "<a href='?page=addToFavorite&id={$row['product_id']}'>➕ Add to Favorites</a> | ";
+            echo "<button onclick=\"location.href='?page=addToCart&id={$row['product_id']}'\" id='btn'>➕ Add to Cart</button> | ";
             echo "<a href='?page=likeBook&id={$row['product_id']}' onclick='return confirm(\"Are you sure?\")'>❤️ Like</a>";
             echo "</div>";
         }
