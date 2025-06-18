@@ -132,7 +132,7 @@ class BookController
         LikeModel::setConnection($GLOBALS['pdo']);
         CartModel::setConnection($GLOBALS['pdo']);
 
-        BookView::renderUserBookList($books);
+        // BookView::renderUserBookList($books);
 
 
         $likeCount = 0;

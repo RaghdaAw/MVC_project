@@ -103,6 +103,7 @@ switch ($page) {
 case 'removeFromLike':
         LikeController::delete();
         break;
+
     default:
         echo "<h1>Welcome</h1>
               <a href='?page=login'>Login</a> | 

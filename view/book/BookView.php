@@ -8,6 +8,12 @@ class BookView
 {
     public static function renderBookList($books)
     {
+        if (isset($_SESSION['username'])) {
+            echo "<div class='name'>Welkom, " . $_SESSION['username'] . "</div>";
+            echo '<a href="public.php?page=logout">🚪 Logout</a>';
+        } else {
+            echo "<div class='name'>Login</div>";
+        }
         echo "<h2>📚 All Books</h2><a href='public.php?page=addBook'>➕ Add Book</a><br><br>";
         echo "<table border='1' cellpadding='10'>";
         echo "<tr><th>Image</th><th>Name</th><th>Author</th><th>Year</th><th>Price</th><th>Description</th><th>Action</th></tr>";
@@ -101,9 +107,11 @@ class BookView
     {
         if (isset($_SESSION['username'])) {
             echo "<div class='name'>Welkom, " . $_SESSION['username'] . "</div>";
+            echo '<a href="public.php?page=logout">🚪 Logout</a>';
         } else {
             echo "<div class='name'>Login</div>";
         }
+
 
         // $cartCount = 0;
         // $likeCount = 0;
@@ -176,21 +184,21 @@ class BookView
 
 
             // زر الإعجاب ❤️
-    document.querySelectorAll('.like-button').forEach(button => {
-        button.addEventListener('click', function () {
-            const productId = this.dataset.id;
+            document.querySelectorAll('.like-button').forEach(button => {
+                button.addEventListener('click', function () {
+                    const productId = this.dataset.id;
 
-            fetch('ajax/likeBook.php?id=' + productId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        document.getElementById('likeCount').innerText = data.count;
-                    } else {
-                        alert('❌ Failed to like the book');
-                    }
+                    fetch('ajax/likeBook.php?id=' + productId)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                document.getElementById('likeCount').innerText = data.count;
+                            } else {
+                                alert('❌ Failed to like the book');
+                            }
+                        });
                 });
-        });
-    });
+            });
 
         </script>
         <?php
