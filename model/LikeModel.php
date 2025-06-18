@@ -18,9 +18,34 @@ class LikeModel {
         return $stmt->execute([$user_id, $product_id]);
     }
 
-    public static function getLikeCount($user_id) {
-        $stmt = self::$pdo->prepare("SELECT COUNT(*) FROM likes WHERE user_id = ?");
-        $stmt->execute([$user_id]);
-        return $stmt->fetchColumn();
+  public static function getLikeItems($user_id)
+{
+    $stmt = self::$pdo->prepare("
+        SELECT c.like_id, p.* FROM likes c 
+        JOIN product p ON c.product_id = p.product_id 
+        WHERE c.user_id = :user_id
+    ");
+    $stmt->execute([':user_id' => $user_id]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+       public static function getLikeCount($user_id)
+    {
+        $stmt = self::$pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE user_id = :user_id");
+        $stmt->execute([':user_id' => $user_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result['total'] ?? 0;
     }
+
+ public static function removeFromLike($user_id, $like_id)
+{
+    $stmt = self::$pdo->prepare("DELETE FROM likes WHERE like_id = :like_id AND user_id = :user_id");
+    return $stmt->execute([
+        ':like_id' => $like_id,
+        ':user_id' => $user_id
+    ]);
+}
+
+    
 }

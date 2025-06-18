@@ -5,10 +5,11 @@ include_once __DIR__ . '/model/dbConnect.php';
 include_once __DIR__ . '/controller/UserController.php';
 include_once __DIR__ . '/controller/BookController.php';
 include_once __DIR__ . '/controller/CartController.php';
+ include_once __DIR__ . '/controller/LikeController.php';
 
 UserModel::setConnection($pdo);
 CartModel::setConnection($pdo);
-CartModel::setConnection($pdo);
+LikeModel::setConnection($pdo);
 
 
 $page = $_GET['page'] ?? '';
@@ -89,12 +90,19 @@ switch ($page) {
     case 'removeFromCart':
         CartController::delete();
         break;
+    // Like
 
     case 'likeBook':
-        require_once 'controller/LikeController.php';
+
         LikeController::likeBook();
         break;
 
+    case 'like':
+        LikeController::showLike();
+        break;
+case 'removeFromLike':
+        LikeController::delete();
+        break;
     default:
         echo "<h1>Welcome</h1>
               <a href='?page=login'>Login</a> | 

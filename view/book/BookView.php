@@ -97,7 +97,7 @@ class BookView
         <?php
     }
 
-    public static function renderUserBookList($books)
+    public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
     {
         if (isset($_SESSION['username'])) {
             echo "<div class='name'>Welkom, " . $_SESSION['username'] . "</div>";
@@ -105,15 +105,15 @@ class BookView
             echo "<div class='name'>Login</div>";
         }
 
-        $cartCount = 0;
-        $likeCount = 0;
+        // $cartCount = 0;
+        // $likeCount = 0;
         if (isset($_SESSION['user_id'])) {
             $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
-            // $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
         }
 
         echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . $cartCount . '</span></a>';
-        echo ' ❤️ <span id="likeCount">' . $likeCount . '</span>';
+        echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . $likeCount . '</span>';
 
         echo '<section id="two">';
         echo '<h2>📘 Book Details</h2>';
@@ -142,7 +142,7 @@ class BookView
                 <button class="add-to-cart" data-id="' . $id . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
                     ➕ Add to Cart
                 </button>
-                <button class="like-button" data-id="<?= $id ?>"
+                <button class="like-button" data-id="' . $id . '"
                  style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
                  ❤️ Like
                  </button>
@@ -172,6 +172,25 @@ class BookView
                     });
                 });
             });
+
+
+
+            // زر الإعجاب ❤️
+    document.querySelectorAll('.like-button').forEach(button => {
+        button.addEventListener('click', function () {
+            const productId = this.dataset.id;
+
+            fetch('ajax/likeBook.php?id=' + productId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('likeCount').innerText = data.count;
+                    } else {
+                        alert('❌ Failed to like the book');
+                    }
+                });
+        });
+    });
 
         </script>
         <?php

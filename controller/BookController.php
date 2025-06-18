@@ -2,6 +2,7 @@
 
 include_once __DIR__ . '/../model/Book.php';
 include_once __DIR__ . '/../view/book/BookView.php';
+include_once __DIR__ . '/../model/LikeModel.php';
 
 class BookController
 {
@@ -121,13 +122,31 @@ class BookController
             exit;
         }
     }
+
     public static function showUserBooks()
     {
+        // session_start();
+
         $bookModel = new Book($GLOBALS['pdo']);
         $books = $bookModel->getAllBooks();
-        // include_once __DIR__ . '/../view/book/BookView.php';
+        LikeModel::setConnection($GLOBALS['pdo']);
+        CartModel::setConnection($GLOBALS['pdo']);
+
         BookView::renderUserBookList($books);
+
+
+        $likeCount = 0;
+        $cartCount = 0;
+
+        if (isset($_SESSION['user_id'])) {
+            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
+        }
+
+        // تمرير البيانات إلى الـ View
+        BookView::renderUserBookList($books, $cartCount, $likeCount);
     }
+
 
 }
 
