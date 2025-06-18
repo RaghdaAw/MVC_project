@@ -8,6 +8,8 @@ include_once __DIR__ . '/controller/CartController.php';
 
 UserModel::setConnection($pdo);
 CartModel::setConnection($pdo);
+CartModel::setConnection($pdo);
+
 
 $page = $_GET['page'] ?? '';
 
@@ -88,6 +90,10 @@ switch ($page) {
         CartController::delete();
         break;
 
+    case 'likeBook':
+        require_once 'controller/LikeController.php';
+        LikeController::likeBook();
+        break;
 
     default:
         echo "<h1>Welcome</h1>

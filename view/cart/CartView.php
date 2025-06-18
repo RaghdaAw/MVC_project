@@ -21,6 +21,7 @@ class CartView
   
     public static function renderUserCartList($items)
     {
+        echo " <a href='public.php?page=userDashboard'>🔙</a>";
         echo "<h2>🛒 Your Cart</h2>";
 
         if (empty($items)) {
@@ -40,7 +41,7 @@ class CartView
                     echo "<p><img src='{$item['image_url']}' alt='Book Image' style='width:100px;height:auto;'></p>";
                 }
 
-                echo "<a href='?page=removeFromCart&idcart={$item['product_id']}' onclick='return confirm(\"Are you sure?\")'>🗑️ Remove</a>";
+                echo "<a href='?page=removeFromCart&idcart={$item['cart_id']}' onclick='return confirm(\"Are you sure?\")'>🗑️ Remove</a>";
 
                 echo "</div>";
             }

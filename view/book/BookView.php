@@ -1,4 +1,9 @@
+<!-- 
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <link rel="stylesheet" href="../styles.css"> -->
+
 <?php
+
 class BookView
 {
     public static function renderBookList($books)
@@ -99,27 +104,79 @@ class BookView
         } else {
             echo "<div class='name'>Login</div>";
         }
-        
-        echo "<h1>📘 Book Details</h1>";
+
+        $cartCount = 0;
+        $likeCount = 0;
+        if (isset($_SESSION['user_id'])) {
+            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
+            // $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+        }
+
+        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . $cartCount . '</span></a>';
+        echo ' ❤️ <span id="likeCount">' . $likeCount . '</span>';
+
+        echo '<section id="two">';
+        echo '<h2>📘 Book Details</h2>';
+        echo '<div class="row">';
 
         foreach ($books as $row) {
-            echo "<div class='book-item' style='border:1px solid #ccc; padding:10px; margin-bottom:10px;'>";
-            echo "<p><strong>ID:</strong> {$row['product_id']}</p>";
-            echo "<p><strong>Name:</strong> " . htmlspecialchars($row['name']) . "</p>";
-            echo "<p><strong>Author:</strong> " . htmlspecialchars($row['author']) . "</p>";
-            echo "<p><strong>Year:</strong> {$row['year']}</p>";
-            echo "<p><strong>Price:</strong> {$row['price']}</p>";
-            echo "<p><strong>Description:</strong> " . nl2br(htmlspecialchars($row['description'])) . "</p>";
+            $img = !empty($row['image_url']) ? htmlspecialchars($row['image_url']) : 'images/thumbs/default.jpg';
+            $name = htmlspecialchars($row['name']);
+            $author = htmlspecialchars($row['author']);
+            $desc = nl2br(htmlspecialchars($row['description']));
+            $price = htmlspecialchars($row['price']);
+            $id = $row['product_id'];
 
-            if (!empty($row['image_url'])) {
-                echo "<p><img src='{$row['image_url']}' alt='Book Image' style='width:100px;height:auto;'></p>";
-            }
+            echo '
+        <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
+            <a href="' . $img . '" class="image fit thumb">
+                <img src="' . $img . '" alt="' . $name . '" />
+            </a>
 
-            echo "<button onclick=\"location.href='?page=addToCart&id={$row['product_id']}'\" id='btn'>➕ Add to Cart</button> | ";
-            echo "<a href='?page=likeBook&id={$row['product_id']}' onclick='return confirm(\"Are you sure?\")'>❤️ Like</a>";
-            echo "</div>";
+            <h3>' . $name . '</h3>
+            <p><strong>Author:</strong> ' . $author . '</p>
+            <p>' . $desc . '</p>
+            <p><strong>Price:</strong> ' . $price . ' €</p>
+
+            <div style="margin-top:10px;">
+                <button class="add-to-cart" data-id="' . $id . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
+                    ➕ Add to Cart
+                </button>
+                <button class="like-button" data-id="<?= $id ?>"
+                 style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
+                 ❤️ Like
+                 </button>
+
+            </div>
+        </article>';
         }
+
+        echo '</div>';
+        echo '</section>';
+        ?>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                document.querySelectorAll('.add-to-cart').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const productId = this.dataset.id;
+
+                        fetch('ajax/addToCart.php?id=' + productId)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    document.getElementById('cartCount').innerText = data.count;
+                                } else {
+                                    alert('❌ Failed to add to cart');
+                                }
+                            });
+                    });
+                });
+            });
+
+        </script>
+        <?php
     }
+
 
 }
 
