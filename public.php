@@ -103,6 +103,9 @@ switch ($page) {
 case 'removeFromLike':
         LikeController::delete();
         break;
+case 'search':
+    BookController::search();
+    break;
 
     default:
         echo "<h1>Welcome</h1>

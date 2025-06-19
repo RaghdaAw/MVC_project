@@ -70,6 +70,13 @@ public function getBookById($product_id)
     $stmt->execute([':product_id' => $product_id]);
     return $stmt->fetch(PDO::FETCH_ASSOC);
 }
+public function searchBooks($keyword)
+{
+    $sql = "SELECT * FROM product WHERE name LIKE :keyword OR author LIKE :keyword";
+    $stmt = $this->pdo->prepare($sql);
+    $stmt->execute(['keyword' => '%' . $keyword . '%']);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
 
 }

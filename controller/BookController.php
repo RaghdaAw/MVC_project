@@ -125,15 +125,10 @@ class BookController
 
     public static function showUserBooks()
     {
-        // session_start();
-
         $bookModel = new Book($GLOBALS['pdo']);
         $books = $bookModel->getAllBooks();
         LikeModel::setConnection($GLOBALS['pdo']);
         CartModel::setConnection($GLOBALS['pdo']);
-
-        // BookView::renderUserBookList($books);
-
 
         $likeCount = 0;
         $cartCount = 0;
@@ -142,11 +137,25 @@ class BookController
             $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
             $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
         }
-
-        // تمرير البيانات إلى الـ View
         BookView::renderUserBookList($books, $cartCount, $likeCount);
     }
 
+public static function search()
+{
+    if (!isset($_GET['q']) || empty(trim($_GET['q']))) {
+        echo "❌ Vul een zoekterm in.";
+        return;
+    }
+
+    // require_once 'model/dbConnect.php';
+    $keyword = htmlspecialchars($_GET['q']);
+
+    $bookModel = new Book($GLOBALS['pdo']);
+    $books = $bookModel->searchBooks($keyword);
+       
+            
+    BookView::renderSearchResults($books, $keyword);
+}
 
 }
 
