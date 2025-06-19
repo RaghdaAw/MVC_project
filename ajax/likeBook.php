@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../model/dbConnect.php';
 require_once __DIR__ . '/../model/LikeModel.php';
 
-LikeModel::setConnection($db->getConnection());
+LikeModel::setConnection($pdo);
 
 header('Content-Type: application/json');
 

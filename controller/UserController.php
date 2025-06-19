@@ -95,16 +95,21 @@ class UserController
     }
 
 
-    public static function logout()
-    {
-        if (session_status() === PHP_SESSION_NONE) {
-            session_start();
-        }
+   public static function logout()
+{
+    session_start();
+    
+    // حذف كل البيانات من الجلسة
+    $_SESSION = [];
 
-        session_destroy();
-        header("Location: public.php?page=login");
-        exit;
-    }
+    // تدمير الجلسة
+    session_destroy();
+
+    // إعادة التوجيه للصفحة الرئيسية أو صفحة تسجيل الدخول
+    header("Location: public.php?page=login");
+    exit;
+}
+
 
     public static function showAll()
     {
