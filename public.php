@@ -113,3 +113,6 @@ case 'search':
               <a href='?page=register'>Register</a>";
         break;
 }
+?>
+
+<script src="view/assets/js/main.js"></script>
