@@ -103,6 +103,9 @@ switch ($page) {
 case 'removeFromLike':
         LikeController::delete();
         break;
+case 'search':
+    BookController::search();
+    break;
 
     default:
         echo "<h1>Welcome</h1>
@@ -110,3 +113,6 @@ case 'removeFromLike':
               <a href='?page=register'>Register</a>";
         break;
 }
+?>
+
+<script src="view/assets/js/main.js"></script>

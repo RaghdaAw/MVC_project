@@ -112,9 +112,6 @@ class BookView
             echo "<div class='name'>Login</div>";
         }
 
-
-        // $cartCount = 0;
-        // $likeCount = 0;
         if (isset($_SESSION['user_id'])) {
             $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
             $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
@@ -161,49 +158,57 @@ class BookView
 
         echo '</div>';
         echo '</section>';
-        ?>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                document.querySelectorAll('.add-to-cart').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const productId = this.dataset.id;
-
-                        fetch('ajax/addToCart.php?id=' + productId)
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    document.getElementById('cartCount').innerText = data.count;
-                                } else {
-                                    alert('❌ Failed to add to cart');
-                                }
-                            });
-                    });
-                });
-            });
-
-
-
-            // زر الإعجاب ❤️
-            document.querySelectorAll('.like-button').forEach(button => {
-                button.addEventListener('click', function () {
-                    const productId = this.dataset.id;
-
-                    fetch('ajax/likeBook.php?id=' + productId)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                document.getElementById('likeCount').innerText = data.count;
-                            } else {
-                                alert('❌ Failed to like the book');
-                            }
-                        });
-                });
-            });
-
-        </script>
-        <?php
+        
     }
 
+public static function renderSearchResults($books, $keyword)
+{
+        
+        if (isset($_SESSION['user_id'])) {
+            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
+            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+        }
 
+        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . $cartCount . '</span></a>';
+        echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . $likeCount . '</span>';
+
+        echo '<section id="two">';
+        echo '<h2>🔍 Search results</h2>';
+        echo '<div class="row">';
+
+        foreach ($books as $row) {
+            $img = !empty($row['image_url']) ? htmlspecialchars($row['image_url']) : 'images/thumbs/default.jpg';
+            $name = htmlspecialchars($row['name']);
+            $author = htmlspecialchars($row['author']);
+            $desc = nl2br(htmlspecialchars($row['description']));
+            $price = htmlspecialchars($row['price']);
+            $id = $row['product_id'];
+
+            echo '
+        <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
+            <a href="' . $img . '" class="image fit thumb">
+                <img src="' . $img . '" alt="' . $name . '" />
+            </a>
+
+            <h3>' . $name . '</h3>
+            <p><strong>Author:</strong> ' . $author . '</p>
+            <p>' . $desc . '</p>
+            <p><strong>Price:</strong> ' . $price . ' €</p>
+
+            <div style="margin-top:10px;">
+                <button class="add-to-cart" data-id="' . $id . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
+                    ➕ Add to Cart
+                </button>
+                <button class="like-button" data-id="' . $id . '"
+                 style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
+                 ❤️ Like
+                 </button>
+
+            </div>
+        </article>';
+        
+    }
+
+}
 }
 
