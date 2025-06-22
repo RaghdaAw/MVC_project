@@ -6,21 +6,36 @@ class UserController
 {
     public static function createAdminUser()
     {
-        require_once __DIR__ . '/../model/UserModel.php';
-        $userModel = new UserModel();
         UserModel::setConnection($GLOBALS['pdo']);
+        
+        // تحقق إن الأدمن موجود سابقاً لتفادي التكرار
+        $existingAdmins = array_filter(UserModel::getAllUsers(), function($user) {
+            return $user->role === 'admin';
+        });
+        if (count($existingAdmins) > 0) {
+            echo "❌ Admin user already exists.";
+            return;
+        }
 
-        $result = UserModel::registerAdmin('Admin', 'Super', 'admin123', 'admin');
+        $user = new UserModel();
+        $user->firstname = 'Admin';
+        $user->lastname = 'Super';
+        $user->username = 'admin';
+        $user->password = 'admin123'; // سيتم تشفيرها في save()
+        $user->role = 'admin';
 
-        if ($result) {
+        try {
+            $user->save();
             echo "✅ Admin created successfully";
-        } else {
-            echo "❌ Failed to create admin. The username may already be in use.";
+        } catch (Exception $e) {
+            echo "❌ Failed to create admin. Possibly username already exists.";
         }
     }
 
     public static function handleRegister()
     {
+        UserModel::setConnection($GLOBALS['pdo']);
+
         echo "<h1>Register</h1>";
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,13 +50,29 @@ class UserController
                 return;
             }
 
-            $success = UserModel::register($firstname, $lastname, $password, $username);
+            // تحقق من وجود اسم المستخدم مسبقًا
+            $allUsers = UserModel::getAllUsers();
+            foreach ($allUsers as $existingUser) {
+                if ($existingUser->username === $username) {
+                    echo "❌ Username already in use.";
+                    UserView::renderRegister();
+                    return;
+                }
+            }
 
-            if ($success) {
+            $user = new UserModel();
+            $user->firstname = $firstname;
+            $user->lastname = $lastname;
+            $user->username = $username;
+            $user->password = $password; // سيتم تشفيرها داخل save()
+            $user->role = 'user';
+
+            try {
+                $user->save();
                 header("Location: public.php?page=login");
                 exit;
-            } else {
-                echo "❌Registration failed. The username may already be in use.";
+            } catch (Exception $e) {
+                echo "❌ Registration failed.";
                 UserView::renderRegister();
             }
         } else {
@@ -51,13 +82,15 @@ class UserController
 
     public static function handleLogin()
     {
+        UserModel::setConnection($GLOBALS['pdo']);
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $username = trim($_POST['username'] ?? '');
             $password = trim($_POST['password'] ?? '');
 
             if ($username === '' || $password === '') {
                 echo "❌ Username and password are required.";
-                // UserView::renderLogin();
+                UserView::renderLogin();
                 return;
             }
 
@@ -66,23 +99,16 @@ class UserController
             if ($user) {
                 if (session_status() === PHP_SESSION_NONE) {
                     session_start();
-
-
                 }
 
-                $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['username'] = $user['username'];
-                $_SESSION['role'] = $user['role'];
+                $_SESSION['user_id'] = $user->getID();
+                $_SESSION['username'] = $user->username;
+                $_SESSION['role'] = $user->role;
 
-
-
-                if ($user['role'] !== 'admin') {
-                    header("Location: public.php?page=userDashboard ");
+                if ($user->role !== 'admin') {
+                    header("Location: public.php?page=userDashboard");
                 } else {
-                    header(
-                        "Location: public.php?page=books"
-                    );
-
+                    header("Location: public.php?page=books");
                 }
                 exit;
             } else {
@@ -94,33 +120,37 @@ class UserController
         }
     }
 
+    public static function logout()
+    {
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
 
-   public static function logout()
-{
-    session_start();
-    
-    // حذف كل البيانات من الجلسة
-    $_SESSION = [];
+        // حذف جميع بيانات الجلسة
+        $_SESSION = [];
+        session_destroy();
 
-    // تدمير الجلسة
-    session_destroy();
-
-    // إعادة التوجيه للصفحة الرئيسية أو صفحة تسجيل الدخول
-    header("Location: public.php?page=login");
-    exit;
-}
-
+        header("Location: public.php?page=login");
+        exit;
+    }
 
     public static function showAll()
     {
+        UserModel::setConnection($GLOBALS['pdo']);
+
         $users = UserModel::getAllUsers();
         UserView::renderUserList($users);
     }
 
     public static function delete()
     {
+        UserModel::setConnection($GLOBALS['pdo']);
+
         if (isset($_GET['del'])) {
-            UserModel::deleteUser((int) $_GET['del']);
+            $user = UserModel::load((int)$_GET['del']);
+            if ($user) {
+                $user->delete();
+            }
             header("Location: public.php?page=users");
             exit;
         }
