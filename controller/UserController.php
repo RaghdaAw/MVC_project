@@ -50,7 +50,7 @@ class UserController
                 return;
             }
 
-            // تحقق من وجود اسم المستخدم مسبقًا
+            // username validation
             $allUsers = UserModel::getAllUsers();
             foreach ($allUsers as $existingUser) {
                 if ($existingUser->username === $username) {
@@ -64,7 +64,7 @@ class UserController
             $user->firstname = $firstname;
             $user->lastname = $lastname;
             $user->username = $username;
-            $user->password = $password; // سيتم تشفيرها داخل save()
+            $user->password = $password; 
             $user->role = 'user';
 
             try {
@@ -125,8 +125,7 @@ class UserController
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
-
-        // حذف جميع بيانات الجلسة
+     // delete session data
         $_SESSION = [];
         session_destroy();
 

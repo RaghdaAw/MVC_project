@@ -1,4 +1,7 @@
-    <link rel="stylesheet" href="assets/css/main.css" />
+    <head>
+  <link rel="stylesheet" href="assets/css/main.css" />
+</head>
+
 
 <footer class="site-footer">
     <div class="footer-left">

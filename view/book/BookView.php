@@ -1,40 +1,52 @@
+    <link rel="stylesheet" href="assets/css/main.css" />
+
 <?php
 
 class BookView
 {
     public static function renderBookList($books)
-    {
-        if (isset($_SESSION['username'])) {
-            echo "<div class='name'>Welkom, " . htmlspecialchars($_SESSION['username']) . "</div>";
-            echo '<a href="public.php?page=logout">🚪 Logout</a>';
-        } else {
-            echo "<div class='name'>Login</div>";
-        }
+{
+    include __DIR__ . '/../navbarAdmin.php';
+    ?>
+   
 
-        echo "<h2>📚 All Books</h2><a href='public.php?page=addBook'>➕ Add Book</a><br><br>";
-        echo "<table border='1' cellpadding='10'>";
-        echo "<tr><th>Image</th><th>Name</th><th>Author</th><th>Year</th><th>Price</th><th>Description</th><th>Action</th></tr>";
+        <h2>📚 All Books</h2>
+        <!-- <a href='public.php?page=addBook' class="add-book-button">➕ Add Book</a> -->
 
-        foreach ($books as $book) {
-            $img = $book->image_url ? "<img src='" . htmlspecialchars($book->image_url) . "' width='100'>" : "No image";
-            echo "<tr>
-                <td>{$img}</td>
-                <td>" . htmlspecialchars($book->name) . "</td>
-                <td>" . htmlspecialchars($book->author) . "</td>
-                <td>" . htmlspecialchars($book->year) . "</td>
-                <td>" . htmlspecialchars($book->price) . "</td>
-                <td>" . htmlspecialchars($book->description) . "</td>
-                <td><a href='public.php?page=editBook&id=" . urlencode($book->getID()) . "'>✏️ Edit</a></td>
-                <td><a href='public.php?page=deleteBook&id=" . urlencode($book->getID()) . "' onclick='return confirm(\"Are you sure?\")'>🗑 Delete</a></td>
-            </tr>";
-        }
+        <div class="book-cards">
+            <?php foreach ($books as $book): ?>
+                <div class="book-card">
+                    <?php if ($book->image_url): ?>
+                        <img src="<?= htmlspecialchars($book->image_url) ?>" alt="Book Cover">
+                    <?php else: ?>
+                        <div class="no-image">No Image</div>
+                    <?php endif; ?>
 
-        echo "</table>";
-    }
+                    <div class="book-info">
+                        <h3><?= htmlspecialchars($book->name) ?></h3>
+                        <p><strong>Author:</strong> <?= htmlspecialchars($book->author) ?></p>
+                        <p><strong>Year:</strong> <?= htmlspecialchars($book->year) ?></p>
+                        <p><strong>Price:</strong> €<?= htmlspecialchars($book->price) ?></p>
+                        <p><?= htmlspecialchars($book->description) ?></p>
+                        <div class="book-actions">
+                            <a href="public.php?page=editBook&id=<?= urlencode($book->getID()) ?>" class="edit-btn">✏️ Edit</a>
+                            <a href="public.php?page=deleteBook&id=<?= urlencode($book->getID()) ?>" class="delete-btn" onclick="return confirm('Are you sure?')">🗑 Delete</a>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php
+}
+
 
     public static function renderAddForm()
     {
-        echo "<h2>➕ Add Book</h2>";
+    include __DIR__ . '/../navbarAdmin.php';
+
+        echo '<h2 class="page-title">✏️ Add Book</h2>';
+
         ?>
         <form method="POST" action="" enctype="multipart/form-data">
             <label>📖Name Book:</label><br>
@@ -62,6 +74,8 @@ class BookView
 
     public static function renderEditForm($book)
     {
+    include __DIR__ . '/../navbarAdmin.php';
+
         ?>
         <h2>✏️ Edit Book</h2>
         <form method="POST" action="public.php?page=updateBook&id=<?= urlencode($book->getID()); ?>" enctype="multipart/form-data">
@@ -100,6 +114,8 @@ class BookView
 
     public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
     {
+        include __DIR__ . '/../navbar.php';
+
         if (isset($_SESSION['username'])) {
             echo "<div class='name'>Welkom, " . htmlspecialchars($_SESSION['username']) . "</div>";
             echo '<a href="public.php?page=logout">🚪 Logout</a>';
@@ -118,8 +134,6 @@ class BookView
         echo '<section id="two">';
         echo '<h2>📘 Book Details</h2>';
         echo '<div class="row">';
-
-        // var_dump($books[0]); // يمكنك إلغاء التعليق إذا أردت فحص بيانات الكتاب
 
         foreach ($books as $book) {
             $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
@@ -155,6 +169,8 @@ class BookView
 
         echo '</div>';
         echo '</section>';
+        include __DIR__ . '/../footer.php';
+
     }
 
     public static function renderSearchResults($books, $keyword)
