@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . '/../model/dbConnect.php';
 require_once __DIR__ . '/../model/CartModel.php';
 
-CartModel::setConnection($pdo);
+global $pdo;
 
 header('Content-Type: application/json');
 
@@ -23,7 +23,7 @@ try {
 
     if ($existingItem) {
         // المنتج موجود: زود الكمية بواحد
-        $cartItem = CartModel::load($existingItem['cart_id']);
+       $cartItem = CartModel::findByID($existingItem['cart_id']);
         $cartItem->quantity += 1;
         $cartItem->save();
     } else {

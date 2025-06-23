@@ -40,7 +40,7 @@ class CartController
         }
 
         $cart_id = $_GET['cart_id'];
-        $item = CartModel::load($cart_id);
+        $item = CartModel::findByID($cart_id);
 
         if ($item !== null) {
             try {

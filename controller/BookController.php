@@ -162,7 +162,7 @@ class BookController
         $books = Book::getAll();
 
         LikeModel::setConnection($GLOBALS['pdo']);
-        CartModel::setConnection($GLOBALS['pdo']);
+        global $pdo;
 
         $likeCount = 0;
         $cartCount = 0;

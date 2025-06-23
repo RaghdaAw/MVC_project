@@ -11,8 +11,8 @@ include_once __DIR__ . '/model/UserModel.php';
 include_once __DIR__ . '/model/CartModel.php';
 include_once __DIR__ . '/model/LikeModel.php';
 
-UserModel::setConnection($pdo);
-CartModel::setConnection($pdo);
+global $pdo;
+
 LikeModel::setConnection($pdo);
 
 $page = $_GET['page'] ?? '';

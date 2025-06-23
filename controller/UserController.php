@@ -6,7 +6,7 @@ class UserController
 {
     public static function createAdminUser()
     {
-        UserModel::setConnection($GLOBALS['pdo']);
+        global $pdo;
         
         // تحقق إن الأدمن موجود سابقاً لتفادي التكرار
         $existingAdmins = array_filter(UserModel::getAllUsers(), function($user) {
@@ -34,7 +34,7 @@ class UserController
 
     public static function handleRegister()
     {
-        UserModel::setConnection($GLOBALS['pdo']);
+        global $pdo;
 
         echo "<h1>Register</h1>";
 
@@ -82,7 +82,7 @@ class UserController
 
     public static function handleLogin()
     {
-        UserModel::setConnection($GLOBALS['pdo']);
+        global $pdo;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['login'])) {
             $username = trim($_POST['username'] ?? '');
@@ -135,7 +135,7 @@ class UserController
 
     public static function showAll()
     {
-        UserModel::setConnection($GLOBALS['pdo']);
+        global $pdo;
 
         $users = UserModel::getAllUsers();
         UserView::renderUserList($users);
@@ -143,7 +143,7 @@ class UserController
 
     public static function delete()
     {
-        UserModel::setConnection($GLOBALS['pdo']);
+       global $pdo;
 
         if (isset($_GET['del'])) {
             $user = UserModel::load((int)$_GET['del']);
