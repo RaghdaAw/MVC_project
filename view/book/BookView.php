@@ -1,5 +1,3 @@
-    <link rel="stylesheet" href="assets/css/main.css" />
-
 <?php
 
 class BookView

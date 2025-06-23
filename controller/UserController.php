@@ -112,7 +112,7 @@ class UserController
                 }
                 exit;
             } else {
-                echo "<p style='color:red;'>❌ اسم المستخدم أو كلمة المرور غير صحيحة.</p>";
+                echo "<p style='color:red;'>❌ UserName of Passwoord fout.</p>";
                 UserView::renderLogin();
             }
         } else {

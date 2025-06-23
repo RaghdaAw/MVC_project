@@ -1,8 +1,3 @@
-    <head>
-  <link rel="stylesheet" href="assets/css/main.css" />
-</head>
-
-
 <footer class="site-footer">
     <div class="footer-left">
         <div class="social-icons">
@@ -14,6 +9,6 @@
     </div>
 
     <div class="footer-right">
-        Created by Raghda & Ni-yara
+        Created by <strong>Raghda</strong> & <strong>Ni-yara</strong>
     </div>
 </footer>
