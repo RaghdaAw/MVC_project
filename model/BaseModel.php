@@ -12,35 +12,36 @@ abstract class BaseModel implements ORMinterface {
     public function getID() {
         return $this->{$this->primaryKey};
     }
+public function save() {
+    global $pdo;
+    $fields = $this->getFields();
+    $columns = array_keys($fields);
 
-    public function save() {
-        global $pdo;
+    if ($this->{$this->primaryKey} === null) {
+        // INSERT
+        $colsStr = implode(", ", $columns);
+        $placeholders = ":" . implode(", :", $columns);
 
-        $fields = $this->getFields();
-        $columns = array_keys($fields);
+        $stmt = $pdo->prepare("INSERT INTO {$this->table} ($colsStr) VALUES ($placeholders)");
+        $result = $stmt->execute($fields);
 
-        if ($this->{$this->primaryKey} === null) {
-            // INSERT
-            $colsStr = implode(", ", $columns);
-            $placeholders = ":" . implode(", :", $columns);
-
-            $stmt = $pdo->prepare("INSERT INTO {$this->table} ($colsStr) VALUES ($placeholders)");
-            $stmt->execute($fields);
-
+        if ($result) {
             $this->{$this->primaryKey} = $pdo->lastInsertId();
-        } else {
-            // UPDATE
-            $updateFields = [];
-            foreach ($columns as $col) {
-                $updateFields[] = "$col = :$col";
-            }
-            $updateStr = implode(", ", $updateFields);
-
-            $fields[$this->primaryKey] = $this->{$this->primaryKey};
-            $stmt = $pdo->prepare("UPDATE {$this->table} SET $updateStr WHERE {$this->primaryKey} = :{$this->primaryKey}");
-            $stmt->execute($fields);
         }
+        return $result;
+    } else {
+        // UPDATE
+        $updateFields = [];
+        foreach ($columns as $col) {
+            $updateFields[] = "$col = :$col";
+        }
+        $updateStr = implode(", ", $updateFields);
+
+        $fields[$this->primaryKey] = $this->{$this->primaryKey};
+        $stmt = $pdo->prepare("UPDATE {$this->table} SET $updateStr WHERE {$this->primaryKey} = :{$this->primaryKey}");
+        return $stmt->execute($fields);
     }
+}
 
     public function delete() {
         global $pdo;

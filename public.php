@@ -13,8 +13,6 @@ include_once __DIR__ . '/model/LikeModel.php';
 
 global $pdo;
 
-LikeModel::setConnection($pdo);
-
 $page = $_GET['page'] ?? '';
 
 switch ($page) {
@@ -131,6 +129,4 @@ switch ($page) {
 ?>
 
 <script src="view/assets/js/main.js"></script>
-    <link rel="stylesheet" href="view/assets/css/main.css" />
-
-
+<link rel="stylesheet" href="view/assets/css/main.css" />

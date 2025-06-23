@@ -142,8 +142,8 @@ class BookView
             $id_product= $book->getID();
 
             echo '
-            <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-            <p> '.$id_product. ' </p>
+            <article class="col-6 col-12-xsmall work-item" >
+            
                 <a href="' . $img . '" class="image fit thumb">
                     <img src="' . $img . '" alt="' . $name . '" />
                 </a>
@@ -154,11 +154,10 @@ class BookView
                 <p><strong>Price:</strong> ' . $price . ' €</p>
 
                 <div style="margin-top:10px;">
-                    <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
+                    <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
                         ➕ Add to Cart
                     </button>
-                    <button class="like-button" data-id="' . htmlspecialchars($id_product) . '"
-                     style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
+                    <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
                      ❤️ Like
                      </button>
                 </div>

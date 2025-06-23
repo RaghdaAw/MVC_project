@@ -11,7 +11,7 @@ class BookController
 
     public static function init()
     {
-        // مجلد التحميل - مسار مطلق
+        // Upload folder - absolute path
         self::$uploadDir = realpath(__DIR__ . '/../views/uploadImages') . DIRECTORY_SEPARATOR;
         if (!file_exists(self::$uploadDir)) {
             mkdir(self::$uploadDir, 0755, true);
@@ -32,10 +32,10 @@ class BookController
             $image_url = null;
 
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-                // تحقق من نوع الملف المسموح (jpg, png, gif)
+                // Check allowed file types (jpg, png, gif)
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
                 if (!in_array($_FILES['image']['type'], $allowed)) {
-                    echo "❌ نوع الملف غير مدعوم.";
+                    echo "❌ Unsupported file type.";
                     return;
                 }
 
@@ -43,10 +43,10 @@ class BookController
                 $targetFile = self::$uploadDir . $uniqueName;
 
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
-                    // استخدم المسار النسبي بالنسبة للمشروع
+                    // Use relative path for the project
                     $image_url = 'views/uploadImages/' . $uniqueName;
                 } else {
-                    echo "❌ حدث خطأ في رفع الملف.";
+                    echo "❌ Error uploading file.";
                     return;
                 }
             }
@@ -76,39 +76,39 @@ class BookController
             header("Location: public.php?page=books");
             exit;
         } else {
-            echo "⛔ معرّف الكتاب غير صالح.";
+            echo "⛔ Invalid book ID.";
         }
     }
 
-  public static function edit()
-{
-    if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-        echo "⛔ Book ID is missing or invalid.";
-        return;
+    public static function edit()
+    {
+        if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
+            echo "⛔ Book ID is missing or invalid.";
+            return;
+        }
+
+        $book = Book::findByID($_GET['id']);
+
+        if (!$book) {
+            echo "⛔ Book not found.";
+            return;
+        }
+
+        BookView::renderEditForm($book);
     }
-
-    $book = Book::findByID($_GET['id']);
-
-    if (!$book) {
-        echo "⛔ Book not found.";
-        return;
-    }
-
-    BookView::renderEditForm($book);
-}
 
     public static function update()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update'])) {
             if (!isset($_POST['id']) || !is_numeric($_POST['id'])) {
-                echo "⛔ معرّف الكتاب غير صالح.";
+                echo "⛔ The book ID is invalid.";
                 return;
             }
 
             $book = Book::findByID($_POST['id']);
-        if (!$book) {
-            echo "⛔ Book not found.";
-            return;
+            if (!$book) {
+                echo "⛔ Book not found.";
+                return;
             }
 
             $image_url = $_POST['old_image'] ?? null;
@@ -116,11 +116,10 @@ class BookController
             if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
                 $allowed = ['image/jpeg', 'image/png', 'image/gif'];
                 if (!in_array($_FILES['image']['type'], $allowed)) {
-                    echo "❌ نوع الملف غير مدعوم.";
+                    echo "❌ File type not allowed.";
                     return;
                 }
-
-                // حذف الصورة القديمة إذا وجدت
+                // Delete the old image if it exists
                 if (!empty($image_url)) {
                     $oldImageFullPath = realpath(__DIR__ . '/../' . $image_url);
                     if ($oldImageFullPath && file_exists($oldImageFullPath)) {
@@ -134,7 +133,7 @@ class BookController
                 if (move_uploaded_file($_FILES["image"]["tmp_name"], $targetFile)) {
                     $image_url = 'views/uploadImages/' . $uniqueName;
                 } else {
-                    echo "❌ حدث خطأ في رفع الملف.";
+                    echo "❌ Error uploading file.";
                     return;
                 }
             }
@@ -155,13 +154,11 @@ class BookController
 
     public static function showUserBooks()
     {
-        if(session_status() !== PHP_SESSION_ACTIVE) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
 
         $books = Book::getAll();
-
-        LikeModel::setConnection($GLOBALS['pdo']);
         global $pdo;
 
         $likeCount = 0;
@@ -178,7 +175,7 @@ class BookController
     public static function search()
     {
         if (!isset($_GET['q']) || empty(trim($_GET['q']))) {
-            echo "❌ Vul een zoekterm in.";
+            echo "❌ Please enter a search term.";
             return;
         }
 
@@ -186,7 +183,7 @@ class BookController
         $books = Book::search($keyword);
 
         if (empty($books)) {
-            echo "❌ لم يتم العثور على نتائج للبحث عن: " . htmlspecialchars($keyword);
+            echo "❌ No results found for: " . htmlspecialchars($keyword);
             return;
         }
 
@@ -194,5 +191,4 @@ class BookController
     }
 }
 
-// استدعاء init عند تحميل الكنترولر لضبط مجلد التحميل
 BookController::init();

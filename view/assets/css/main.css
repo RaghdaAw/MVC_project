@@ -178,6 +178,95 @@ h2.page-title {
 .delete-btn:hover {
     background-color: #c82333;
 }
+/* === Book List Section === */
+#two {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+#two h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #2b2d42;
+  margin-bottom: 2rem;
+}
+
+/* Grid layout */
+#two .row {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Book Card */
+.work-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.work-item:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.work-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.work-item h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.5rem;
+  color: #3f37c9;
+}
+
+.work-item p {
+  margin: 0.3rem 0;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.work-item strong {
+  color: #333;
+}
+
+/* Buttons */
+.work-item button {
+  margin-top: 0.7rem;
+  margin-right: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-to-cart {
+  background-color: #4361ee;
+  color: white;
+}
+
+.add-to-cart:hover {
+  background-color: #2748ca;
+}
+
+.like-button {
+  background-color: #f72585;
+  color: white;
+}
+
+.like-button:hover {
+  background-color: #d4166f;
+}
 
 /* Forms (Add/Edit Book) */
 form {
@@ -309,23 +398,110 @@ form button[type="submit"]:hover {
     transform: scale(1.05);
 }
 
-/* Responsive Footer */
-@media (max-width: 768px) {
-    .site-footer {
-        flex-direction: column;
-        text-align: center;
-        padding: 30px 20px;
-    }
 
-    .footer-left, .footer-right {
-        justify-content: center;
-    }
-
-    .social-icons a {
-        margin: 5px;
-    }
-
-    .contact-button {
-        margin-top: 10px;
-    }
+.contact-container {
+    width: 100%;
+    max-width: 600px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    padding: 40px;
+    margin: 20px;
+    transition: transform 0.3s ease;
 }
+
+.contact-container:hover {
+    transform: translateY(-5px);
+}
+
+h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2.2rem;
+    font-weight: 700;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #9b59b6);
+    border-radius: 2px;
+}
+
+/* Form Styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+input, textarea {
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+input:focus, textarea:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+input::placeholder, textarea::placeholder {
+    color: #95a5a6;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 150px;
+}
+
+button {
+    background: linear-gradient(135deg, #3498db, #9b59b6);
+    color: white;
+    border: none;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+/* Success Message */
+.success-msg {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #d4edda;
+    color: #155724;
+    border-radius: 8px;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
