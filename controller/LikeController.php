@@ -1,7 +1,6 @@
 <?php
 require_once __DIR__ . '/../model/LikeModel.php';
-include_once __DIR__ . '/../view/like/LikeView.php';
-
+require_once __DIR__ . '/../view/like/LikeView.php';
 
 class LikeController
 {
@@ -15,9 +14,13 @@ class LikeController
         }
 
         $user_id = $_SESSION['user_id'];
-        $product_id = $_GET['id'];
+        $product_id = (int) $_GET['id'];
 
-        $success = LikeModel::likeProduct($user_id, $product_id);
+        $like = new LikeModel();
+        $like->user_id = $user_id;
+        $like->product_id = $product_id;
+
+        $success = $like->save();
 
         if ($success) {
             header("Location: public.php?page=books");
@@ -31,33 +34,35 @@ class LikeController
     {
         // session_start();
         if (!isset($_SESSION['user_id'])) {
-            echo "❌ Please log in to view your Like.";
+            echo "❌ Please log in to view your Likes.";
             return;
         }
 
         $user_id = $_SESSION['user_id'];
-        $items = LikeModel::getLikeItems($user_id);
+        $items = LikeModel::getLikeItemsByUser($user_id);
+
         LikeView::renderUserLikeList($items);
     }
 
     public static function delete()
-{
-    if (!isset($_GET['idlike']) || !isset($_SESSION['user_id'])) {
-        echo "❌ Invalid request.";
-        return;
+    {
+        session_start(); // تأكد من تفعيل الجلسة
+
+        if (!isset($_GET['idlike']) || !isset($_SESSION['user_id'])) {
+            echo "❌ Invalid request.";
+            return;
+        }
+
+        $like_id = (int) $_GET['idlike'];
+        $user_id = $_SESSION['user_id'];
+
+        $success = LikeModel::removeFromLike($user_id, $like_id);
+
+        if ($success) {
+            header("Location: public.php?page=like");
+            exit;
+        } else {
+            echo "❌ Failed to remove like.";
+        }
     }
-
-    $like_id = $_GET['idlike'];
-    $user_id = $_SESSION['user_id'];
-
-    $success = LikeModel::removeFromLike($user_id, $like_id);
-
-    if ($success) {
-        header("Location: public.php?page=like");
-        exit;
-    } else {
-        echo "❌ Failed to remove item.";
-    }
-}
-
 }
