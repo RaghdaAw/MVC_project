@@ -5,12 +5,13 @@ include_once __DIR__ . '/model/dbConnect.php';
 include_once __DIR__ . '/controller/UserController.php';
 include_once __DIR__ . '/controller/BookController.php';
 include_once __DIR__ . '/controller/CartController.php';
- include_once __DIR__ . '/controller/LikeController.php';
+include_once __DIR__ . '/controller/LikeController.php';
 
-UserModel::setConnection($pdo);
-CartModel::setConnection($pdo);
-LikeModel::setConnection($pdo);
+include_once __DIR__ . '/model/UserModel.php';
+include_once __DIR__ . '/model/CartModel.php';
+include_once __DIR__ . '/model/LikeModel.php';
 
+global $pdo;
 
 $page = $_GET['page'] ?? '';
 
@@ -85,27 +86,39 @@ switch ($page) {
         break;
 
     case 'cart':
-        CartController::showCart();
+        CartController::execute();
         break;
+
     case 'removeFromCart':
-        CartController::delete();
-        break;
-    // Like
+        if (!isset($_GET['cart_id'])) {
+            echo "❌ Missing cart_id.";
+            exit;
+        }
 
+        $cart_id = $_GET['cart_id'];
+        CartModel::decreaseOrDelete($cart_id);
+
+        // إعادة التوجيه لصفحة السلة بعد التحديث
+        header("Location: public.php?page=cart");
+        exit;
+
+    // ✅ Like
     case 'likeBook':
-
         LikeController::likeBook();
         break;
 
     case 'like':
         LikeController::showLike();
         break;
-case 'removeFromLike':
+
+    case 'removeFromLike':
         LikeController::delete();
         break;
-case 'search':
-    BookController::search();
-    break;
+
+    // ✅ Search
+    case 'search':
+        BookController::search();
+        break;
 
     default:
         echo "<h1>Welcome</h1>
@@ -116,3 +129,4 @@ case 'search':
 ?>
 
 <script src="view/assets/js/main.js"></script>
+<link rel="stylesheet" href="view/assets/css/main.css" />

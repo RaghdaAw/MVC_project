@@ -1,83 +1,99 @@
 <?php
+require_once __DIR__ . '/BaseModel.php';
 
-class Book
+class Book extends BaseModel
 {
-    private $pdo;
+    protected $table = 'product';
+    protected $primaryKey = 'product_id';
 
-    public function __construct($pdo)
+    public $product_id; // المفتاح الأساسي
+    public $name;
+    public $author;
+    public $year;
+    public $price;
+    public $description;
+    public $image_url;
+
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        $this->product_id = null;
+        $this->name = "";
+        $this->author = "";
+        $this->year = 0;
+        $this->price = 0.0;
+        $this->description = "";
+        $this->image_url = "";
     }
 
-    private function bindParams($stmt, $data)
+    // تُعيد الحقول التي سيتم حفظها (تجاهل المفتاح الأساسي)
+    protected function getFields(): array
     {
-        foreach ($data as $param => $value) {
-            $stmt->bindValue(':' . $param, $value);
+        return [
+            'name' => $this->name,
+            'author' => $this->author,
+            'year' => $this->year,
+            'price' => $this->price,
+            'description' => $this->description,
+            'image_url' => $this->image_url
+        ];
+    }
+
+    public static function initializeDatabase()
+    {
+        global $pdo;
+        $pdo->prepare(
+            "CREATE TABLE IF NOT EXISTS product (
+                product_id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                author VARCHAR(255) NOT NULL,
+                year INT NOT NULL,
+                price FLOAT NOT NULL,
+                description TEXT,
+                image_url VARCHAR(255)
+            );"
+        )->execute();
+    }
+
+    public function delete()
+    {
+        global $pdo;
+
+        if ($this->product_id === null) {
+            throw new Exception("Book does not exist in database.");
         }
-    }
 
-    public function getAllBooks()
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM product");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function insertBook($BookData)
-    {
-        $data = compact('name', 'author', 'year', 'price', 'description', 'image_url');
-        $sql = "INSERT INTO product (name, author, year, price, description, image_url)
-                VALUES (:name, :author, :year, :price, :description, :image_url)";
-        $stmt = $this->pdo->prepare($sql);
-        $this->bindParams($stmt, $data);
-        return $stmt->execute();
-    }
-
-    public function deleteBook($product_id)
-    {
-        $stmt = $this->pdo->prepare("SELECT image_url FROM product WHERE product_id = :id");
-        $stmt->bindValue(':id', $product_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $book = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if ($book && !empty($book['image_url']) && file_exists($book['image_url'])) {
-            unlink($book['image_url']);
+        // حذف الصورة إن وجدت
+        if (!empty($this->image_url) && file_exists($this->image_url)) {
+            unlink($this->image_url);
         }
 
-        $stmt = $this->pdo->prepare("DELETE FROM product WHERE product_id = :id");
-        $stmt->bindValue(':id', $product_id, PDO::PARAM_INT);
-        return $stmt->execute();
+        parent::delete(); // حذف من قاعدة البيانات وتنظيف الحقول
     }
 
-    public function updateBook($BookData)
+    public static function fromArray(array $data)
     {
-        $data = compact('product_id', 'name', 'author', 'year', 'price', 'description', 'image_url');
-        $sql = "UPDATE product 
-                SET name = :name, author = :author, year = :year, price = :price,
-                    description = :description, image_url = :image_url 
-                WHERE product_id = :product_id";
-        $stmt = $this->pdo->prepare($sql);
-        $this->bindParams($stmt, $data);
-        return $stmt->execute();
+        $book = new self();
+        $book->product_id = $data['product_id'];
+        $book->name = $data['name'];
+        $book->author = $data['author'];
+        $book->year = $data['year'];
+        $book->price = $data['price'];
+        $book->description = $data['description'];
+        $book->image_url = $data['image_url'];
+        return $book;
     }
 
-    public function getBookById($product_id)
+    // يمكن إضافة دوال خاصة مثل البحث هنا إن أردت، مثلاً:
+    public static function search($keyword)
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM product WHERE product_id = :product_id");
-        $stmt->execute([':product_id' => $product_id]);
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
-
-    public function searchBooks($keyword)
-    {
-        $sql = "SELECT * FROM product 
-                WHERE name LIKE :keyword 
-                   OR author LIKE :keyword 
-                   OR description LIKE :keyword 
-                   OR CAST(year AS CHAR) LIKE :keyword 
-                   OR CAST(price AS CHAR) LIKE :keyword";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([':keyword' => '%' . $keyword . '%']);
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        global $pdo;
+        $stmt = $pdo->prepare("
+            SELECT * FROM product 
+            WHERE name LIKE :kw OR author LIKE :kw OR description LIKE :kw
+                  OR CAST(year AS CHAR) LIKE :kw OR CAST(price AS CHAR) LIKE :kw
+        ");
+        $stmt->execute([':kw' => '%' . $keyword . '%']);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromArray'], $rows);
     }
 }

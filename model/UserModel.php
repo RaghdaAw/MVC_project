@@ -1,83 +1,93 @@
 <?php
+require_once __DIR__ . '/BaseModel.php';
 
-class UserModel
+class UserModel extends BaseModel
 {
-    private static $pdo;
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
 
-    public static function setConnection($pdo)
+    public $user_id;
+    public $firstname;
+    public $lastname;
+    public $username;
+    public $password; // raw password عند الإدخال فقط
+    public $role;
+
+    public function __construct()
     {
-        self::$pdo = $pdo;
-    }
-    public static function registerAdmin($firstname, $lastname, $password, $username)
-    {
-        try {
-            $stmt = self::$pdo->prepare("SELECT user_id FROM users WHERE username = :username");
-            $stmt->execute([':username' => $username]);
-
-            if ($stmt->fetch()) {
-                return false;
-            }
-
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = self::$pdo->prepare("
-            INSERT INTO users (firstname, lastname, password, username, role)
-            VALUES (:firstname, :lastname, :password, :username, 'admin')
-        ");
-            $stmt->execute([
-                ':firstname' => $firstname,
-                ':lastname' => $lastname,
-                ':password' => $hashedPassword,
-                ':username' => $username
-            ]);
-            return $stmt->rowCount() > 0;
-        } catch (PDOException $e) {
-            return false;
-        }
+        $this->user_id = null;
+        $this->firstname = '';
+        $this->lastname = '';
+        $this->username = '';
+        $this->password = '';
+        $this->role = 'user';
     }
 
-    public static function register($firstname, $lastname, $password, $username)
+    protected function getFields(): array
     {
-        try {
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-            $stmt = self::$pdo->prepare("
-                INSERT INTO users (firstname, lastname, password, username, role)
-                VALUES (:firstname, :lastname, :password, :username, 'user')
-            ");
-            $stmt->execute([
-                ':firstname' => $firstname,
-                ':lastname' => $lastname,
-                ':password' => $hashedPassword,
-                ':username' => $username
-            ]);
-            return $stmt->rowCount() > 0;
-        } catch (PDOException $e) {
-            return false;
+        $fields = [
+            'firstname' => $this->firstname,
+            'lastname'  => $this->lastname,
+            'username'  => $this->username,
+            'role'      => $this->role
+        ];
+
+        if ($this->user_id === null && !empty($this->password)) {
+            $fields['password'] = password_hash($this->password, PASSWORD_DEFAULT);
         }
+
+        return $fields;
+    }
+
+    public static function fromArray(array $data): self
+    {
+        $user = new self();
+        $user->user_id   = $data['user_id'] ?? null;
+        $user->firstname = $data['firstname'] ?? '';
+        $user->lastname  = $data['lastname'] ?? '';
+        $user->username  = $data['username'] ?? '';
+        $user->role      = $data['role'] ?? '';
+        return $user;
     }
 
     public static function login($username, $password)
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM users WHERE username = :username");
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE username = :username");
         $stmt->execute([':username' => $username]);
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $userData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($user && password_verify($password, $user['password'])) {
-            return $user;
+        if ($userData && password_verify($password, $userData['password'])) {
+            return self::fromArray($userData);
         }
 
         return false;
     }
 
-    public static function getAllUsers()
+    public static function initializeDatabase()
     {
-        $stmt = self::$pdo->prepare("SELECT * FROM users");
+        global $pdo;
+        $stmt = $pdo->prepare("
+            CREATE TABLE IF NOT EXISTS users (
+                user_id INT AUTO_INCREMENT PRIMARY KEY,
+                firstname VARCHAR(100) NOT NULL,
+                lastname VARCHAR(100) NOT NULL,
+                username VARCHAR(100) NOT NULL UNIQUE,
+                password VARCHAR(255) NOT NULL,
+                role VARCHAR(20) NOT NULL
+            );
+        ");
         $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function deleteUser($id)
+    // ✅ دوال مطلوبة من UserController
+    public static function getAllUsers(): array
     {
-        $stmt = self::$pdo->prepare("DELETE FROM users WHERE user_id = :user_id");
-        return $stmt->execute([':user_id' => $id]);
+        return self::findAll();
+    }
+
+    public static function load(int $id): ?self
+    {
+        return self::findByID($id);
     }
 }
