@@ -130,3 +130,4 @@ switch ($page) {
 
 <script src="view/assets/js/main.js"></script>
 <link rel="stylesheet" href="view/assets/css/main.css" />
+<link rel="stylesheet" href="view/assets/css/about.css" />

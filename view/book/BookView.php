@@ -1,6 +1,6 @@
 <?php
 
-class BookView
+  class BookView
 {
     public static function renderBookList($books)
 {
@@ -114,20 +114,20 @@ class BookView
     {
         include __DIR__ . '/../navbar.php';
 
-        if (isset($_SESSION['username'])) {
-            echo "<div class='name'>Welkom, " . htmlspecialchars($_SESSION['username']) . "</div>";
-            echo '<a href="public.php?page=logout">🚪 Logout</a>';
-        } else {
-            echo "<div class='name'>Login</div>";
-        }
+        // if (isset($_SESSION['username'])) {
+        //     echo "<div class='name'>Welkom, " . htmlspecialchars($_SESSION['username']) . "</div>";
+        //     echo '<a href="public.php?page=logout">🚪 Logout</a>';
+        // } else {
+        //     echo "<div class='name'>Login</div>";
+        // }
 
-        if (isset($_SESSION['user_id'])) {
-            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
-            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
-        }
+        // if (isset($_SESSION['user_id'])) {
+        //     $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
+        //     $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+        // }
 
-        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
-        echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
+        // echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
+        // echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
 
         echo '<section id="two">';
         echo '<h2>📘 Book Details</h2>';
@@ -166,6 +166,14 @@ class BookView
 
         echo '</div>';
         echo '</section>';
+        ?>
+        <section id="about">
+            <?php
+            include __DIR__ . '/../about.php';
+            ?>
+        </section>
+            <?php
+
         include __DIR__ . '/../footer.php';
 
     }
