@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>About Our Library</title>
+    <!-- <title>About Our Library</title> -->
   <link rel="stylesheet" href="assets/css/about.css" />
 
 </head>

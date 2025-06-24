@@ -1,9 +1,12 @@
 html {
   scroll-behavior: smooth;
 }
-.logo{
-    width: 10px;
-    height: 10px;
+.logo img {
+    width: 40px;
+    height: auto;
+    border-radius: 20px;
+    margin-right: 15px;
+    vertical-align: middle;
 }
 /* Navbar Admin */
 .admin-navbar {

@@ -1,6 +1,8 @@
 <?php
 include_once __DIR__ . '/../model/UserModel.php';
 include_once __DIR__ . '/../view/user/UserView.php';
+require_once __DIR__ . '/../helpers/validation.php';
+
 
 class UserController
 {
@@ -8,7 +10,7 @@ class UserController
     {
         global $pdo;
         
-        // تحقق إن الأدمن موجود سابقاً لتفادي التكرار
+ 
         $existingAdmins = array_filter(UserModel::getAllUsers(), function($user) {
             return $user->role === 'admin';
         });
@@ -21,7 +23,7 @@ class UserController
         $user->firstname = 'Admin';
         $user->lastname = 'Super';
         $user->username = 'admin';
-        $user->password = 'admin123'; // سيتم تشفيرها في save()
+        $user->password = 'admin123'; 
         $user->role = 'admin';
 
         try {
@@ -33,52 +35,68 @@ class UserController
     }
 
     public static function handleRegister()
-    {
-        global $pdo;
+{
+    global $pdo;
 
-        echo "<h1>Register</h1>";
+    echo "<h1>Register</h1>";
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstname = trim($_POST['firstname'] ?? '');
-            $lastname = trim($_POST['lastname'] ?? '');
-            $username = trim($_POST['username'] ?? '');
-            $password = trim($_POST['password'] ?? '');
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $firstname = sanitizeInput($_POST['firstname'] ?? '');
+        $lastname = sanitizeInput($_POST['lastname'] ?? '');
+        $username = sanitizeInput($_POST['username'] ?? '');
+        $password = trim($_POST['password'] ?? ''); // نتحقق لاحقًا من القوة
 
-            if ($firstname === '' || $lastname === '' || $username === '' || $password === '') {
-                echo "❌ All fields are required.";
+        // ✅ check if all fields are filled
+        if ($firstname === '' || $lastname === '' || $username === '' || $password === '') {
+            echo "❌ All fields are required.";
+            UserView::renderRegister();
+            return;
+        }
+
+        // ✅ check if first name and last name are valid
+        if (!isValidUsername($username)) {
+            echo "❌ Username must be 4-20 characters and contain only letters, numbers, or underscore.";
+            UserView::renderRegister();
+            return;
+        }
+
+        // ✅ تحقق من قوة كلمة السر
+        if (!isStrongPassword($password)) {
+            echo "❌ Password must be at least 6 characters.";
+            UserView::renderRegister();
+            return;
+        }
+
+        // ✅ تأكد أن اسم المستخدم غير مستخدم من قبل
+        $allUsers = UserModel::getAllUsers();
+        foreach ($allUsers as $existingUser) {
+            if ($existingUser->username === $username) {
+                echo "❌ Username already in use.";
                 UserView::renderRegister();
                 return;
             }
+        }
 
-            // username validation
-            $allUsers = UserModel::getAllUsers();
-            foreach ($allUsers as $existingUser) {
-                if ($existingUser->username === $username) {
-                    echo "❌ Username already in use.";
-                    UserView::renderRegister();
-                    return;
-                }
-            }
+        $user = new UserModel();
+        $user->firstname = $firstname;
+        $user->lastname = $lastname;
+        $user->username = $username;
+        $user->password = $password;
+        $user->role = 'user';
 
-            $user = new UserModel();
-            $user->firstname = $firstname;
-            $user->lastname = $lastname;
-            $user->username = $username;
-            $user->password = $password; 
-            $user->role = 'user';
-
-            try {
-                $user->save();
-                header("Location: public.php?page=login");
-                exit;
-            } catch (Exception $e) {
-                echo "❌ Registration failed.";
-                UserView::renderRegister();
-            }
-        } else {
+        try {
+            $user->save();
+            header("Location: public.php?page=login");
+            exit;
+        } catch (Exception $e) {
+            echo "❌ Registration failed.";
             UserView::renderRegister();
         }
+    } else {
+        UserView::renderRegister();
     }
+}
+
 
     public static function handleLogin()
     {
