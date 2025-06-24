@@ -172,7 +172,7 @@ class BookController
         BookView::renderUserBookList($books, $cartCount, $likeCount);
     }
 
-    public static function search()
+    public static function search() : void
     {
         if (!isset($_GET['q']) || empty(trim($_GET['q']))) {
             echo "❌ Please enter a search term.";

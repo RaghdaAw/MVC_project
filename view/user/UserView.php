@@ -6,12 +6,12 @@ class UserView
     {
         echo <<<HTML
         <h2>Account maken</h2>
-        <form method="POST" action="?page=register">
-            <input type="text" name="firstname" placeholder="Firstname" required><br><br>
-            <input type="text" name="lastname" placeholder="Lastname" required><br><br>
-            <input type="password" name="password" placeholder="Password" required><br><br>
-            <input type="text" name="username" placeholder="Username" required><br><br>
-            <button type="submit">Register</button>
+        <form class="register-card" method="POST" action="?page=register">
+            <input class="register-input" type="text" name="firstname" placeholder="Firstname" required><br><br>
+            <input class="register-input" type="text" name="lastname" placeholder="Lastname" required><br><br>
+            <input class="register-input" type="password" name="password" placeholder="Password" required><br><br>
+            <input class="register-input" type="text" name="username" placeholder="Username" required><br><br>
+            <button class="register-button" type="submit">Register</button>
         </form>
         HTML;
     }

@@ -443,13 +443,20 @@ h2::after {
 }
 
 /* Form Styles */
-form {
+.register-card {
+    background: white;
+    padding: 32px;
+    border-radius: 10px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    justify-content: center;
+    align-items: center;
 }
 
-input, textarea {
+.register-card, textarea {
     padding: 15px;
     border: 1px solid #e0e0e0;
     border-radius: 8px;
@@ -458,12 +465,20 @@ input, textarea {
     outline: none;
 }
 
-input:focus, textarea:focus {
+.register-input {
+    padding: 12px 16px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 350px;
+}
+
+.register-input:focus, textarea:focus {
     border-color: #3498db;
     box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
 }
 
-input::placeholder, textarea::placeholder {
+.register-input::placeholder, textarea::placeholder {
     color: #95a5a6;
 }
 
@@ -472,8 +487,8 @@ textarea {
     min-height: 150px;
 }
 
-button {
-    background: linear-gradient(135deg, #3498db, #9b59b6);
+.register-button {
+    background: linear-gradient(135deg, #a11a1a, #9b59b6);
     color: white;
     border: none;
     padding: 16px;
@@ -486,12 +501,12 @@ button {
     letter-spacing: 1px;
 }
 
-button:hover {
+.register-button:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
 }
 
-button:active {
+.register-button:active {
     transform: translateY(0);
 }
 
