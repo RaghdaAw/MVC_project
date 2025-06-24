@@ -1,29 +1,47 @@
 <?php
+require_once __DIR__ . '/BaseModel.php';
 
-class LikeModel {
-    private static $pdo;
 
-    private $like_id;
+class LikeModel extends BaseModel
+{
+    protected $table = 'likes';
+    protected $primaryKey = 'like_id';
+
+    public $like_id;
     public $user_id;
     public $product_id;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->like_id = null;
         $this->user_id = null;
         $this->product_id = null;
     }
 
-    public static function setConnection($db) {
-        self::$pdo = $db;
+    // Used to insert/update fields in the table
+    protected function getFields(): array
+    {
+        return [
+            'user_id' => $this->user_id,
+            'product_id' => $this->product_id
+        ];
     }
 
-    public function getID() {
-        return $this->like_id;
+    // Build model instance from array (used by fetchAll or find)
+    public static function fromArray(array $data)
+    {
+        $like = new self();
+        $like->like_id = $data['like_id'] ?? null;
+        $like->user_id = $data['user_id'] ?? null;
+        $like->product_id = $data['product_id'] ?? null;
+        return $like;
     }
 
-    // إنشاء جدول likes إذا لم يكن موجوداً
-    public static function initializeDatabase() {
-        $stmt = self::$pdo->prepare("
+    // Create table if it doesn't exist
+    public static function initializeDatabase()
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("
             CREATE TABLE IF NOT EXISTS likes (
                 like_id INT AUTO_INCREMENT PRIMARY KEY,
                 user_id INT NOT NULL,
@@ -34,76 +52,34 @@ class LikeModel {
         $stmt->execute();
     }
 
-    // حفظ إعجاب (تجنب التكرار)
-    public function save() {
-        // تحقق من وجود الإعجاب مسبقًا
-        $stmt = self::$pdo->prepare("
+    // Save a like only if not already exists
+    public function save()
+    {
+        global $pdo;
+
+        // Check if like already exists
+        $stmt = $pdo->prepare("
             SELECT like_id FROM likes WHERE user_id = :user_id AND product_id = :product_id
         ");
         $stmt->execute([
             ':user_id' => $this->user_id,
             ':product_id' => $this->product_id
         ]);
-
         if ($stmt->fetch()) {
-            return false; // موجود مسبقاً
+            return 'exists'; // موجود مسبقاً في المفضلة
         }
 
-        // إدخال جديد
-        $stmt = self::$pdo->prepare("
-            INSERT INTO likes (user_id, product_id) 
-            VALUES (:user_id, :product_id)
-        ");
-        $stmt->execute([
-            ':user_id' => $this->user_id,
-            ':product_id' => $this->product_id
-        ]);
+        $success = parent::save();
+        return $success ? 'added' : 'error';
 
-        $this->like_id = self::$pdo->lastInsertId();
-        return true;
+
     }
 
-    // حذف الإعجاب
-    public function delete() {
-        if (!$this->like_id) {
-            throw new Exception("Like doesn't exist.");
-        }
-
-        $stmt = self::$pdo->prepare("DELETE FROM likes WHERE like_id = :like_id");
-        $stmt->execute([':like_id' => $this->like_id]);
-
-        $this->like_id = null;
-        $this->user_id = null;
-        $this->product_id = null;
-    }
-
-    // تحميل إعجاب حسب ID
-    public static function load($like_id) {
-        $stmt = self::$pdo->prepare("SELECT * FROM likes WHERE like_id = :like_id");
-        $stmt->execute([':like_id' => $like_id]);
-        $data = $stmt->fetch(PDO::FETCH_ASSOC);
-
-        if (!$data) return null;
-
-        return self::loadSingleResult($data);
-    }
-
-    public static function loadSingleResult($data) {
-        if (!isset($data['like_id'], $data['user_id'], $data['product_id'])) {
-            throw new Exception("Missing like data");
-        }
-
-        $like = new self();
-        $like->like_id = $data['like_id'];
-        $like->user_id = $data['user_id'];
-        $like->product_id = $data['product_id'];
-
-        return $like;
-    }
-
-    // استرجاع المنتجات المعجب بها لمستخدم
-    public static function getLikeItemsByUser($user_id) {
-        $stmt = self::$pdo->prepare("
+    // Get all liked products by user
+    public static function getLikeItemsByUser($user_id)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("
             SELECT l.like_id, p.* 
             FROM likes l
             JOIN product p ON l.product_id = p.product_id
@@ -113,19 +89,21 @@ class LikeModel {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // عدّ الإعجابات لمستخدم
-    public static function getLikeCount($user_id) {
-        $stmt = self::$pdo->prepare("
-            SELECT COUNT(*) AS total FROM likes WHERE user_id = :user_id
-        ");
+    // Count all liked products for a user
+    public static function getLikeCount($user_id)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE user_id = :user_id");
         $stmt->execute([':user_id' => $user_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result['total'] ?? 0;
     }
 
-    // حذف إعجاب باستخدام user_id و like_id
-    public static function removeFromLike($user_id, $like_id) {
-        $stmt = self::$pdo->prepare("
+    // Delete a like by user_id and like_id
+    public static function removeFromLike($user_id, $like_id)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("
             DELETE FROM likes WHERE like_id = :like_id AND user_id = :user_id
         ");
         return $stmt->execute([
@@ -134,22 +112,3 @@ class LikeModel {
         ]);
     }
 }
-include_once 'model/LikeModel.php';
-LikeModel::setConnection($pdo);
-LikeModel::initializeDatabase();
-
-// إضافة إعجاب
-$like = new LikeModel();
-$like->user_id = 1;
-$like->product_id = 12;
-$like->save();
-
-// حذف إعجاب
-$like = LikeModel::load(5);
-if ($like) $like->delete();
-
-// عدد الإعجابات
-$count = LikeModel::getLikeCount(1);
-
-// المنتجات المعجب بها
-$items = LikeModel::getLikeItemsByUser(1);

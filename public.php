@@ -11,9 +11,7 @@ include_once __DIR__ . '/model/UserModel.php';
 include_once __DIR__ . '/model/CartModel.php';
 include_once __DIR__ . '/model/LikeModel.php';
 
-UserModel::setConnection($pdo);
-CartModel::setConnection($pdo);
-LikeModel::setConnection($pdo);
+global $pdo;
 
 $page = $_GET['page'] ?? '';
 
@@ -131,6 +129,4 @@ switch ($page) {
 ?>
 
 <script src="view/assets/js/main.js"></script>
-    <link rel="stylesheet" href="view/assets/css/main.css" />
-
-
+<link rel="stylesheet" href="view/assets/css/main.css" />
