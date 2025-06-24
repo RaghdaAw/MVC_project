@@ -1,7 +1,10 @@
 html {
   scroll-behavior: smooth;
 }
-
+.logo{
+    width: 10px;
+    height: 10px;
+}
 /* Navbar Admin */
 .admin-navbar {
     display: flex;
