@@ -6,7 +6,7 @@ abstract class BaseModel implements ORMinterface {
     protected $table;
     protected $primaryKey;
 
-    // يجب أن يعيد مصفوفة الحقول التي سيتم حفظها في قاعدة البيانات (باستثناء المفتاح الأساسي)
+    
     abstract protected function getFields(): array;
 
     public function getID() {
