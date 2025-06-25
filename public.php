@@ -5,12 +5,13 @@ include_once __DIR__ . '/model/dbConnect.php';
 include_once __DIR__ . '/controller/UserController.php';
 include_once __DIR__ . '/controller/BookController.php';
 include_once __DIR__ . '/controller/CartController.php';
- include_once __DIR__ . '/controller/LikeController.php';
+include_once __DIR__ . '/controller/LikeController.php';
 
-UserModel::setConnection($pdo);
-CartModel::setConnection($pdo);
-LikeModel::setConnection($pdo);
+include_once __DIR__ . '/model/UserModel.php';
+include_once __DIR__ . '/model/CartModel.php';
+include_once __DIR__ . '/model/LikeModel.php';
 
+global $pdo;
 
 $page = $_GET['page'] ?? '';
 
@@ -63,13 +64,20 @@ switch ($page) {
         BookController::update();
         break;
 
-    case 'userDashboard':
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
-            echo "⛔ Access Denied";
-            exit;
-        }
-        BookController::showUserBooks();
-        break;
+   case 'userDashboard':
+    if (!isset($_SESSION['role'])) {
+        // Visitor
+        $books = Book::findAll(); 
+        BookView::renderUserBookList($books);
+    } elseif ($_SESSION['role'] === 'user') {
+        // User 
+        $books = Book::findAll(); 
+        BookView::renderUserBookList($books, CartModel::getCartItemCount($_SESSION['user_id']), LikeModel::getLikeItemsByUser($_SESSION['user_id']));
+    } else {
+        echo "⛔ Access Denied";
+    }
+    break;
+
 
     case 'users':
         UserController::showAll();
@@ -85,23 +93,38 @@ switch ($page) {
         break;
 
     case 'cart':
-        CartController::showCart();
+        CartController::execute();
         break;
+
     case 'removeFromCart':
-        CartController::delete();
-        break;
-    // Like
+        if (!isset($_GET['cart_id'])) {
+            echo "❌ Missing cart_id.";
+            exit;
+        }
 
+        $cart_id = $_GET['cart_id'];
+        CartModel::decreaseOrDelete($cart_id);
+
+        // إعادة التوجيه لصفحة السلة بعد التحديث
+        header("Location: public.php?page=cart");
+        exit;
+
+    // ✅ Like
     case 'likeBook':
-
         LikeController::likeBook();
         break;
 
     case 'like':
         LikeController::showLike();
         break;
-case 'removeFromLike':
+
+    case 'removeFromLike':
         LikeController::delete();
+        break;
+
+    // ✅ Search
+    case 'search':
+        BookController::search();
         break;
 
     default:
@@ -110,3 +133,8 @@ case 'removeFromLike':
               <a href='?page=register'>Register</a>";
         break;
 }
+?>
+
+<script src="view/assets/js/main.js"></script>
+<link rel="stylesheet" href="view/assets/css/main.css" />
+<link rel="stylesheet" href="view/assets/css/about.css" />

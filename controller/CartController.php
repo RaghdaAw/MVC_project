@@ -1,63 +1,60 @@
 <?php
-require_once __DIR__ . '/../model/CartModel.php';
-require_once __DIR__ . '/../view/cart/CartView.php';
+include_once __DIR__ . '/../model/CartModel.php';
+include_once __DIR__ . '/../view/cart/CartView.php';
 
 class CartController
 {
-   
-    public static function addToCart()
+    public static function execute()
     {
-        session_start();
-        if (!isset($_SESSION['user_id']) || !isset($_GET['id'])) {
-            echo "⛔ User not logged in or no book selected";
+        if (!isset($_SESSION['user_id'])) {
+            echo "⛔ You must be logged in to view your cart.";
             return;
         }
 
         $userId = $_SESSION['user_id'];
-        $productId = $_GET['id'];
-
-        $success = CartModel::addToCart($userId, $productId);
-
-        if ($success) {
-            header("Location: public.php?page=userDashboard");
-            exit;
-        } else {
-            echo "❌ Failed to add book to cart";
-        }
-    }
-
-    public static function showCart()
-    {
-        // session_start();
-        if (!isset($_SESSION['user_id'])) {
-            echo "❌ Please log in to view your cart.";
-            return;
-        }
-
-        $user_id = $_SESSION['user_id'];
-        $items = CartModel::getCartItems($user_id);
+        $items = CartModel::getCartItemsByUser($userId);
         CartView::renderUserCartList($items);
     }
 
-  public static function delete()
-{
-    if (!isset($_GET['idcart']) || !isset($_SESSION['user_id'])) {
-        echo "❌ Invalid request.";
-        return;
+    public static function addToCart()
+    {
+        if (!isset($_SESSION['user_id'], $_GET['id'])) {
+            echo "⛔ Missing data";
+            return;
+        }
+
+        $cartItem = new CartModel();
+        $cartItem->user_id = $_SESSION['user_id'];
+        $cartItem->product_id = $_GET['id'];
+        $cartItem->save();
+
+        header("Location: public.php?page=userDashboard");
+        exit;
     }
 
-    $cart_id = $_GET['idcart'];
-    $user_id = $_SESSION['user_id'];
+    public static function delete()
+    {
+        if (!isset($_GET['cart_id'])) {
+            echo "⛔ Invalid ID";
+            return;
+        }
 
-    $success = CartModel::removeFromCart($user_id, $cart_id);
+        $cart_id = $_GET['cart_id'];
+        $item = CartModel::findByID($cart_id);
 
-    if ($success) {
+        if ($item !== null) {
+            try {
+                $item->delete();
+            } catch (Exception $e) {
+                echo "❌ Failed to delete item: " . $e->getMessage();
+                return;
+            }
+        } else {
+            echo "⚠️ Cart item not found.";
+            return;
+        }
+
         header("Location: public.php?page=cart");
         exit;
-    } else {
-        echo "❌ Failed to remove item.";
     }
-}
-
-
 }

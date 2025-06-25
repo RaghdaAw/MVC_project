@@ -1,75 +1,98 @@
 <?php
-include("dbConnect.php");
-class Book
+require_once __DIR__ . '/BaseModel.php';
+
+class Book extends BaseModel
 {
-    private $pdo;
+    protected $table = 'product';
+    protected $primaryKey = 'product_id';
 
-    public function __construct($pdo)
+    public $product_id; 
+    public $name;
+    public $author;
+    public $year;
+    public $price;
+    public $description;
+    public $image_url;
+
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        $this->product_id = null;
+        $this->name = "";
+        $this->author = "";
+        $this->year = 0;
+        $this->price = 0.0;
+        $this->description = "";
+        $this->image_url = "";
     }
 
-    public function getAllBooks()
+    
+    protected function getFields(): array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM product");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return [
+            'name' => $this->name,
+            'author' => $this->author,
+            'year' => $this->year,
+            'price' => $this->price,
+            'description' => $this->description,
+            'image_url' => $this->image_url
+        ];
     }
 
-    public function insertBook($name, $author, $year, $price, $description, $image_url = null)
+    public static function initializeDatabase()
     {
-        $sql = "INSERT INTO product (name, author, year, price, description, image_url)
-            VALUES (:name, :author, :year, :price, :description, :image_url)";
-        $stmt = $this->pdo->prepare($sql);
-
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':author', $author);
-        $stmt->bindParam(':year', $year);
-        $stmt->bindParam(':price', $price);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':image_url', $image_url);
-
-        return $stmt->execute();
+        global $pdo;
+        $pdo->prepare(
+            "CREATE TABLE IF NOT EXISTS product (
+                product_id INT AUTO_INCREMENT PRIMARY KEY,
+                name VARCHAR(255) NOT NULL,
+                author VARCHAR(255) NOT NULL,
+                year INT NOT NULL,
+                price FLOAT NOT NULL,
+                description TEXT,
+                image_url VARCHAR(255)
+            );"
+        )->execute();
     }
 
-    public function deleteBook($product_id)
+    public function delete()
     {
-        $stmt = $this->pdo->prepare("SELECT image_url FROM product WHERE product_id = :id");
-        $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
-        $stmt->execute();
-        $book = $stmt->fetch(PDO::FETCH_ASSOC);
+        global $pdo;
 
-        if ($book && !empty($book['image_url']) && file_exists($book['image_url'])) {
-            unlink($book['image_url']);
+        if ($this->product_id === null) {
+            throw new Exception("Book does not exist in database.");
+        }
+      // delete image if exists
+        if (!empty($this->image_url) && file_exists($this->image_url)) {
+            unlink($this->image_url);
         }
 
-        $stmt = $this->pdo->prepare("DELETE FROM product WHERE product_id = :id");
-        $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
-        return $stmt->execute();
+        parent::delete(); 
     }
-public function updateBook($product_id, $name, $author, $year, $price, $description, $image_url)
-{
-    $stmt = $this->pdo->prepare("
-        UPDATE product SET name = :name, author = :author, year = :year,
-                         price = :price, description = :description, image_url = :image_url
-        WHERE product_id = :product_id
-    ");
-    return $stmt->execute([
-        ':product_id' => $product_id,
-        ':name' => $name,
-        ':author' => $author,
-        ':year' => $year,
-        ':price' => $price,
-        ':description' => $description,
-        ':image_url' => $image_url
-    ]);
-}
-public function getBookById($product_id)
-{
-    $stmt = $this->pdo->prepare("SELECT * FROM product WHERE product_id = :product_id");
-    $stmt->execute([':product_id' => $product_id]);
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
 
+    public static function fromArray(array $data)
+    {
+        $book = new self();
+        $book->product_id = $data['product_id'];
+        $book->name = $data['name'];
+        $book->author = $data['author'];
+        $book->year = $data['year'];
+        $book->price = $data['price'];
+        $book->description = $data['description'];
+        $book->image_url = $data['image_url'];
+        return $book;
+    }
 
+    // يمكن إضافة دوال خاصة مثل البحث هنا إن أردت، مثلاً:
+    public static function search($keyword)
+    {
+        global $pdo;
+        $stmt = $pdo->prepare("
+            SELECT * FROM product 
+            WHERE name LIKE :kw OR author LIKE :kw OR description LIKE :kw
+                  OR CAST(year AS CHAR) LIKE :kw OR CAST(price AS CHAR) LIKE :kw
+        ");
+        $stmt->execute([':kw' => '%' . $keyword . '%']);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map([self::class, 'fromArray'], $rows);
+    }
 }
