@@ -9,7 +9,7 @@
    
 
         <h2>📚 All Books</h2>
-        <!-- <a href='public.php?page=addBook' class="add-book-button">➕ Add Book</a> -->
+        
 
         <div class="book-cards">
             <?php foreach ($books as $book): ?>
@@ -110,63 +110,63 @@
         <?php
     }
 
-    public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
-    {
+  public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
+{
+    // session_start(); 
+    if (isset($_SESSION['user_id'])) {
+      
         include __DIR__ . '/../navbar.php';
+    } else {
+        
+        include __DIR__ . '/../navbar_guest.php';
+    }
 
-        // if (isset($_SESSION['username'])) {
-        //     echo "<div class='name'>Welkom, " . htmlspecialchars($_SESSION['username']) . "</div>";
-        //     echo '<a href="public.php?page=logout">🚪 Logout</a>';
-        // } else {
-        //     echo "<div class='name'>Login</div>";
-        // }
+    echo '<section id="two">';
+    echo '<h2>📘 Book Details</h2>';
+    echo '<div class="row">';
 
-        // if (isset($_SESSION['user_id'])) {
-        //     $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
-        //     $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
-        // }
+    foreach ($books as $book) {
+        $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
+        $name = htmlspecialchars($book->name);
+        $author = htmlspecialchars($book->author);
+        $desc = nl2br(htmlspecialchars($book->description));
+        $price = htmlspecialchars($book->price);
+        $id_product= $book->getID();
 
-        // echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
-        // echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
+        echo '
+        <article class="col-6 col-12-xsmall work-item" >
+            <a href="' . $img . '" class="image fit thumb">
+                <img src="' . $img . '" alt="' . $name . '" />
+            </a>
 
-        echo '<section id="two">';
-        echo '<h2>📘 Book Details</h2>';
-        echo '<div class="row">';
+            <h3>' . $name . '</h3>
+            <p><strong>Author:</strong> ' . $author . '</p>
+            <p>' . $desc . '</p>
+            <p><strong>Price:</strong> ' . $price . ' €</p>
 
-        foreach ($books as $book) {
-            $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
-            $name = htmlspecialchars($book->name);
-            $author = htmlspecialchars($book->author);
-            $desc = nl2br(htmlspecialchars($book->description));
-            $price = htmlspecialchars($book->price);
-            $id_product= $book->getID();
+            <div style="margin-top:10px;">';
 
+        if (isset($_SESSION['user_id'])) {
+            // Display buttons only if user is logged in
             echo '
-            <article class="col-6 col-12-xsmall work-item" >
-            
-                <a href="' . $img . '" class="image fit thumb">
-                    <img src="' . $img . '" alt="' . $name . '" />
-                </a>
-
-                <h3>' . $name . '</h3>
-                <p><strong>Author:</strong> ' . $author . '</p>
-                <p>' . $desc . '</p>
-                <p><strong>Price:</strong> ' . $price . ' €</p>
-
-                <div style="margin-top:10px;">
-                    <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
-                        ➕ Add to Cart
-                    </button>
-                    <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
-                     ❤️ Like
-                     </button>
-                </div>
-            </article>';
+                <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
+                    ➕ Add to Cart
+                </button>
+                <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
+                    ❤️ Like
+                </button>';
+        } else {
+            echo '<p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p>';
         }
 
-        echo '</div>';
-        echo '</section>';
-        ?>
+        echo '</div>
+        </article>';
+    }
+
+    echo '</div>';
+    echo '</section>';
+?>
+
         <section id="about">
             <?php
             include __DIR__ . '/../about.php';

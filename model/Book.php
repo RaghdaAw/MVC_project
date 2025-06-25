@@ -6,7 +6,7 @@ class Book extends BaseModel
     protected $table = 'product';
     protected $primaryKey = 'product_id';
 
-    public $product_id; // المفتاح الأساسي
+    public $product_id; 
     public $name;
     public $author;
     public $year;
@@ -25,7 +25,7 @@ class Book extends BaseModel
         $this->image_url = "";
     }
 
-    // تُعيد الحقول التي سيتم حفظها (تجاهل المفتاح الأساسي)
+    
     protected function getFields(): array
     {
         return [
@@ -61,13 +61,12 @@ class Book extends BaseModel
         if ($this->product_id === null) {
             throw new Exception("Book does not exist in database.");
         }
-
-        // حذف الصورة إن وجدت
+      // delete image if exists
         if (!empty($this->image_url) && file_exists($this->image_url)) {
             unlink($this->image_url);
         }
 
-        parent::delete(); // حذف من قاعدة البيانات وتنظيف الحقول
+        parent::delete(); 
     }
 
     public static function fromArray(array $data)

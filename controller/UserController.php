@@ -60,14 +60,14 @@ class UserController
             return;
         }
 
-        // ✅ تحقق من قوة كلمة السر
+        // ✅ check password strength
         if (!isStrongPassword($password)) {
             echo "❌ Password must be at least 6 characters.";
             UserView::renderRegister();
             return;
         }
 
-        // ✅ تأكد أن اسم المستخدم غير مستخدم من قبل
+        // ✅ check if username already exists
         $allUsers = UserModel::getAllUsers();
         foreach ($allUsers as $existingUser) {
             if ($existingUser->username === $username) {

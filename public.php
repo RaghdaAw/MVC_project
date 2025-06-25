@@ -64,13 +64,20 @@ switch ($page) {
         BookController::update();
         break;
 
-    case 'userDashboard':
-        if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
-            echo "⛔ Access Denied";
-            exit;
-        }
-        BookController::showUserBooks();
-        break;
+   case 'userDashboard':
+    if (!isset($_SESSION['role'])) {
+        // Visitor
+        $books = Book::findAll(); 
+        BookView::renderUserBookList($books);
+    } elseif ($_SESSION['role'] === 'user') {
+        // User 
+        $books = Book::findAll(); 
+        BookView::renderUserBookList($books, CartModel::getCartItemCount($_SESSION['user_id']), LikeModel::getLikeItemsByUser($_SESSION['user_id']));
+    } else {
+        echo "⛔ Access Denied";
+    }
+    break;
+
 
     case 'users':
         UserController::showAll();
