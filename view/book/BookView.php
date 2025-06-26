@@ -1,15 +1,15 @@
 <?php
 
-  class BookView
+class BookView
 {
     public static function renderBookList($books)
-{
-    include __DIR__ . '/../navbarAdmin.php';
-    ?>
-   
+    {
+        include __DIR__ . '/../navbarAdmin.php';
+        ?>
+
 
         <h2>📚 All Books</h2>
-        
+
 
         <div class="book-cards">
             <?php foreach ($books as $book): ?>
@@ -28,20 +28,21 @@
                         <p><?= htmlspecialchars($book->description) ?></p>
                         <div class="book-actions">
                             <a href="public.php?page=editBook&id=<?= urlencode($book->getID()) ?>" class="edit-btn">✏️ Edit</a>
-                            <a href="public.php?page=deleteBook&id=<?= urlencode($book->getID()) ?>" class="delete-btn" onclick="return confirm('Are you sure?')">🗑 Delete</a>
+                            <a href="public.php?page=deleteBook&id=<?= urlencode($book->getID()) ?>" class="delete-btn"
+                                onclick="return confirm('Are you sure?')">🗑 Delete</a>
                         </div>
                     </div>
                 </div>
             <?php endforeach; ?>
         </div>
-    </div>
-    <?php
-}
+        </div>
+        <?php
+    }
 
 
     public static function renderAddForm()
     {
-    include __DIR__ . '/../navbarAdmin.php';
+        include __DIR__ . '/../navbarAdmin.php';
 
         echo '<h2 class="page-title">✏️ Add Book</h2>';
 
@@ -72,11 +73,12 @@
 
     public static function renderEditForm($book)
     {
-    include __DIR__ . '/../navbarAdmin.php';
+        include __DIR__ . '/../navbarAdmin.php';
 
         ?>
         <h2>✏️ Edit Book</h2>
-        <form method="POST" action="public.php?page=updateBook&id=<?= urlencode($book->getID()); ?>" enctype="multipart/form-data">
+        <form method="POST" action="public.php?page=updateBook&id=<?= urlencode($book->getID()); ?>"
+            enctype="multipart/form-data">
             <input type="hidden" name="id" value="<?= htmlspecialchars($book->getID()) ?>">
             <input type="hidden" name="old_image" value="<?= htmlspecialchars($book->image_url) ?>">
 
@@ -110,30 +112,32 @@
         <?php
     }
 
-  public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
-{
-    // session_start(); 
-    if (isset($_SESSION['user_id'])) {
-      
-        include __DIR__ . '/../navbar.php';
-    } else {
-        
-        include __DIR__ . '/../navbar_guest.php';
-    }
+    public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
+    {
+        // session_start(); 
+        $cartCount = $cartCount ?? 0;
+        $likeCount = $likeCount ?? 0;
+        if (isset($_SESSION['user_id'])) {
 
-    echo '<section id="two">';
-    echo '<h2>📘 Book Details</h2>';
-    echo '<div class="row">';
+            include __DIR__ . '/../navbar.php';
+        } else {
 
-    foreach ($books as $book) {
-        $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
-        $name = htmlspecialchars($book->name);
-        $author = htmlspecialchars($book->author);
-        $desc = nl2br(htmlspecialchars($book->description));
-        $price = htmlspecialchars($book->price);
-        $id_product= $book->getID();
+            include __DIR__ . '/../navbar_guest.php';
+        }
 
-        echo '
+        echo '<section id="two">';
+        echo '<h2>📘 Book Details</h2>';
+        echo '<div class="row">';
+
+        foreach ($books as $book) {
+            $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
+            $name = htmlspecialchars($book->name);
+            $author = htmlspecialchars($book->author);
+            $desc = nl2br(htmlspecialchars($book->description));
+            $price = htmlspecialchars($book->price);
+            $id_product = $book->getID();
+
+            echo '
         <article class="col-6 col-12-xsmall work-item" >
             <a href="' . $img . '" class="image fit thumb">
                 <img src="' . $img . '" alt="' . $name . '" />
@@ -146,33 +150,33 @@
 
             <div style="margin-top:10px;">';
 
-        if (isset($_SESSION['user_id'])) {
-            // Display buttons only if user is logged in
-            echo '
+            if (isset($_SESSION['user_id'])) {
+                // Display buttons only if user is logged in
+                echo '
                 <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
                     ➕ Add to Cart
                 </button>
                 <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
                     ❤️ Like
                 </button>';
-        } else {
-            echo '<p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p>';
+            } else {
+                echo '<p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p>';
+            }
+
+            echo '</div>
+        </article>';
         }
 
-        echo '</div>
-        </article>';
-    }
-
-    echo '</div>';
-    echo '</section>';
-?>
+        echo '</div>';
+        echo '</section>';
+        ?>
 
         <section id="about">
             <?php
             include __DIR__ . '/../about.php';
             ?>
         </section>
-            <?php
+        <?php
 
         include __DIR__ . '/../footer.php';
 
@@ -205,7 +209,7 @@
 
             echo '
             <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-            <p> '.$id. ' </p>
+            <p> ' . $id . ' </p>
                 <a href="' . $img . '" class="image fit thumb">
                     <img src="' . $img . '" alt="' . $name . '" />
                 </a>

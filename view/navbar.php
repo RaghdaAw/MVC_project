@@ -1,3 +1,9 @@
+<?php
+$cartCount = isset($cartCount) ? $cartCount : 0;
+$likeCount = isset($likeCount) ? $likeCount : 0;
+?>
+
+
 <link rel="stylesheet" href="assets/css/main.css" />
  <title>Bookly Library</title>
 <nav class="admin-navbar">
