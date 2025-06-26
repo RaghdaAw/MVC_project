@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/dbConnect.php';
 require_once __DIR__ . '/BaseModel.php';
 
 class CartModel extends BaseModel
