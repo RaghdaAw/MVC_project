@@ -1,9 +1,9 @@
 <footer class="site-footer">
     <div class="footer-left">
         <div class="social-icons">
-            <a href="https://facebook.com" target="_blank" title="Facebook">F</a>
-            <a href="https://twitter.com" target="_blank" title="Twitter">T</a>
-            <a href="https://instagram.com" target="_blank" title="Instagram">I</a>
+            <a class="facebook-b" href="https://facebook.com" target="_blank" title="Facebook">F</a>
+            <a class="twitter-b" href="https://twitter.com" target="_blank" title="Twitter">X</a>
+            <a class="instagram-b" href="https://instagram.com" target="_blank" title="Instagram">I</a>
         </div>
         <a href="view/contact.php" class="contact-button">Contact</a>
     </div>

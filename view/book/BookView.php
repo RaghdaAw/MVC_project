@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/view/assets/css/main.css" />
 <?php
 
   class BookView
@@ -128,9 +129,8 @@
 
         // echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
         // echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
-
         echo '<section id="two">';
-        echo '<h2>📘 Book Details</h2>';
+        echo '<h2>📘 Books</h2>';
         echo '<div class="row">';
 
         foreach ($books as $book) {
@@ -149,9 +149,9 @@
                 </a>
 
                 <h3>' . $name . '</h3>
-                <p><strong>Author:</strong> ' . $author . '</p>
-                <p>' . $desc . '</p>
-                <p><strong>Price:</strong> ' . $price . ' €</p>
+                <p class="author-text">' . $author . '</p>
+                <p class="desc-text">' . $desc . '</p>
+                <p class="price-text"><strong>€ ' . $price . '</strong> </p>
 
                 <div style="margin-top:10px;">
                     <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
@@ -180,6 +180,7 @@
 
     public static function renderSearchResults($books, $keyword)
     {
+        include  __DIR__ . '/../backHomenav.php';
         if (isset($_SESSION['user_id'])) {
             $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
             $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
@@ -205,7 +206,6 @@
 
             echo '
             <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-            <p> '.$id. ' </p>
                 <a href="' . $img . '" class="image fit thumb">
                     <img src="' . $img . '" alt="' . $name . '" />
                 </a>

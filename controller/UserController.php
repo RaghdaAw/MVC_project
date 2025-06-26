@@ -36,8 +36,6 @@ class UserController
     {
         global $pdo;
 
-        echo "<h1>Register</h1>";
-
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $firstname = trim($_POST['firstname'] ?? '');
             $lastname = trim($_POST['lastname'] ?? '');
