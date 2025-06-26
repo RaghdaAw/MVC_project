@@ -8,8 +8,8 @@
 </head>
 <body>
     <?php 
-       include 'navbar.php';
-
+         include 'navbar.php';
+     
 
     ?>
     <div class="contact-container">

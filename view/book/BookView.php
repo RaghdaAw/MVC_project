@@ -151,55 +151,47 @@ class BookView
         include __DIR__ . '/../footer.php';
     }
     public static function renderSearchResults($books, $keyword)
-    {
-        include __DIR__ . '/../backHomenav.php';
-        if (isset($_SESSION['user_id'])) {
-            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
-            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
-        } else {
-            $cartCount = 0;
-            $likeCount = 0;
-        }
+{
+               include __DIR__ . '/../navbar.php';
 
-        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
-        echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
 
-        echo '<section id="two">';
-        echo '<h2>🔍 Search results for "' . htmlspecialchars($keyword) . '"</h2>';
-        echo '<div class="row">';
+    echo '<section id="two">';
+    echo '<h2>🔍 Search results for "' . htmlspecialchars($keyword) . '"</h2>';
+    echo '<div class="row">';
 
-        foreach ($books as $book) {
-            $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
-            $name = htmlspecialchars($book->name);
-            $author = htmlspecialchars($book->author);
-            $desc = nl2br(htmlspecialchars($book->description));
-            $price = htmlspecialchars($book->price);
-            $id = $book->getID();
+    foreach ($books as $book) {
+        $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
+        $name = htmlspecialchars($book->name);
+        $author = htmlspecialchars($book->author);
+        $desc = nl2br(htmlspecialchars($book->description));
+        $price = htmlspecialchars($book->price);
+        $id = $book->getID();
 
-            echo '
-            <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-                <a href="' . $img . '" class="image fit thumb">
-                    <img src="' . $img . '" alt="' . $name . '" />
-                </a>
+        echo '
+        <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
+            <a href="' . $img . '" class="image fit thumb">
+                <img src="' . $img . '" alt="' . $name . '" />
+            </a>
 
-                <h3>' . $name . '</h3>
-                <p><strong>Author:</strong> ' . $author . '</p>
-                <p>' . $desc . '</p>
-                <p><strong>Price:</strong> ' . $price . ' €</p>
+            <h3>' . $name . '</h3>
+            <p><strong>Author:</strong> ' . $author . '</p>
+            <p>' . $desc . '</p>
+            <p><strong>Price:</strong> ' . $price . ' €</p>
 
-                <div style="margin-top:10px;">
-                    <button class="add-to-cart" data-id="' . htmlspecialchars($id) . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
-                        ➕ Add to Cart
-                    </button>
-                    <button class="like-button" data-id="' . htmlspecialchars($id) . '"
-                     style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
-                     ❤️ Like
-                     </button>
-                </div>
-            </article>';
-        }
-
-        echo '</div>';
-        echo '</section>';
+            <div style="margin-top:10px;">
+                <button class="add-to-cart" data-id="' . htmlspecialchars($id) . '" >
+                    ➕ Add to Cart
+                </button>
+                <button class="like-button" data-id="' . htmlspecialchars($id) . '"
+                 >
+                 ❤️ Like
+                 </button>
+            </div>
+        </article>';
     }
+
+    echo '</div>';
+    echo '</section>';
+}
+
 }

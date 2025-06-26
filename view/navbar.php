@@ -4,13 +4,20 @@
 <nav class="user-navbar">
 
     <div class="nav-links">
-<!--        <a href="public.php?page=userDashboard" class="logo"> <img src="/view/images/Media.jpeg" /></a>-->
+        <!--        <a href="public.php?page=userDashboard" class="logo"> <img src="/view/images/Media.jpeg" /></a>-->
         <a href="public.php?page=userDashboard">Home</a>
         <a href="#about"> About Us</a>
 
         <!-- <a href="public.php?page=users">👥 Users</a> -->
-         <?php
-           echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
+        <?php
+        if (isset($_SESSION['user_id'])) {
+            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
+            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+        } else {
+            $cartCount = 0;
+            $likeCount = 0;
+        }
+        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
         echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
         ?>
         <a href="public.php?page=logout">🚪 Logout</a>
@@ -29,7 +36,7 @@
 
     </div>
 
-  
+
 </nav>
 
 <div class="bookly-hello">
@@ -46,7 +53,7 @@
 
 <form class="search-form" method="get" action="./public.php">
 
-        <input type="hidden" name="page" value="search">
-        <input class="search-books" type="text" name="q" placeholder="Search books...">
-        <button class="search-button" type="submit">🔍 Search</button>
-    </form>
+    <input type="hidden" name="page" value="search">
+    <input class="search-books" type="text" name="q" placeholder="Search books...">
+    <button class="search-button" type="submit">🔍 Search</button>
+</form>
