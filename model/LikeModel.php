@@ -66,7 +66,7 @@ class LikeModel extends BaseModel
             ':product_id' => $this->product_id
         ]);
         if ($stmt->fetch()) {
-            return 'exists'; // موجود مسبقاً في المفضلة
+            return 'exists';
         }
 
         $success = parent::save();
@@ -90,14 +90,14 @@ class LikeModel extends BaseModel
     }
 
     // Count all liked products for a user
-    public static function getLikeCount($user_id)
-    {
-        global $pdo;
-        $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE user_id = :user_id");
-        $stmt->execute([':user_id' => $user_id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $result['total'] ?? 0;
-    }
+   public static function getLikeCount($user_id)
+{
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(DISTINCT product_id) AS total FROM likes WHERE user_id = :user_id");
+    $stmt->execute([':user_id' => $user_id]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['total'] ?? 0;
+}
 
     // Delete a like by user_id and like_id
     public static function removeFromLike($user_id, $like_id)

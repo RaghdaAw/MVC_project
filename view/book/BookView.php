@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/view/assets/css/main.css" />
 <?php
 
 class BookView
@@ -114,31 +115,60 @@ class BookView
 
     public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
     {
-        // session_start(); 
-        $cartCount = $cartCount ?? 0;
-        $likeCount = $likeCount ?? 0;
         if (isset($_SESSION['user_id'])) {
-
             include __DIR__ . '/../navbar.php';
         } else {
-
             include __DIR__ . '/../navbar_guest.php';
         }
-
         echo '<section id="two">';
-        echo '<h2>📘 Book Details</h2>';
+        echo '<h2>📘 Books</h2>';
         echo '<div class="row">';
-
         foreach ($books as $book) {
             $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
             $name = htmlspecialchars($book->name);
             $author = htmlspecialchars($book->author);
             $desc = nl2br(htmlspecialchars($book->description));
             $price = htmlspecialchars($book->price);
-            $id_product = $book->getID();
+            $id_product = $book->getID(); ?>
+            <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px; margin:10px;"> <a
+                    href="<?= $img ?>" class="image fit thumb"> <img src="<?= $img ?>" alt="<?= $name ?>" /> </a>
+                <h3><?= $name ?></h3>
+                <p class="author-text"><?= $author ?></p>
+                <p class="desc-text"><?= $desc ?></p>
+                <p class="price-text"><strong>€ <?= $price ?></strong></p>
+                <div style="margin-top:10px;"> <?php if (isset($_SESSION['user_id'])): ?> <button class="add-to-cart"
+                            data-id="<?= htmlspecialchars($id_product) ?>"> ➕ Add to Cart </button> <button class="like-button"
+                            data-id="<?= htmlspecialchars($id_product) ?>"> ❤️ Like </button> <?php else: ?>
+                        <p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p> <?php endif; ?>
+                </div>
+            </article>
+        <?php }
+        echo '</div>';
+        echo '</section>';
+        echo '<section id="about">';
+        include __DIR__ . '/../about.php';
+        echo '</section>';
+        include __DIR__ . '/../footer.php';
+    }
+    public static function renderSearchResults($books, $keyword)
+{
+               include __DIR__ . '/../navbar.php';
 
-            echo '
-        <article class="col-6 col-12-xsmall work-item" >
+
+    echo '<section id="two">';
+    echo '<h2>🔍 Search results for "' . htmlspecialchars($keyword) . '"</h2>';
+    echo '<div class="row">';
+
+    foreach ($books as $book) {
+        $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
+        $name = htmlspecialchars($book->name);
+        $author = htmlspecialchars($book->author);
+        $desc = nl2br(htmlspecialchars($book->description));
+        $price = htmlspecialchars($book->price);
+        $id = $book->getID();
+
+        echo '
+        <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
             <a href="' . $img . '" class="image fit thumb">
                 <img src="' . $img . '" alt="' . $name . '" />
             </a>
@@ -148,90 +178,20 @@ class BookView
             <p>' . $desc . '</p>
             <p><strong>Price:</strong> ' . $price . ' €</p>
 
-            <div style="margin-top:10px;">';
-
-            if (isset($_SESSION['user_id'])) {
-                // Display buttons only if user is logged in
-                echo '
-                <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
+            <div style="margin-top:10px;">
+                <button class="add-to-cart" data-id="' . htmlspecialchars($id) . '" >
                     ➕ Add to Cart
                 </button>
-                <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
-                    ❤️ Like
-                </button>';
-            } else {
-                echo '<p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p>';
-            }
-
-            echo '</div>
+                <button class="like-button" data-id="' . htmlspecialchars($id) . '"
+                 >
+                 ❤️ Like
+                 </button>
+            </div>
         </article>';
-        }
-
-        echo '</div>';
-        echo '</section>';
-        ?>
-
-        <section id="about">
-            <?php
-            include __DIR__ . '/../about.php';
-            ?>
-        </section>
-        <?php
-
-        include __DIR__ . '/../footer.php';
-
     }
 
-    public static function renderSearchResults($books, $keyword)
-    {
-        if (isset($_SESSION['user_id'])) {
-            $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
-            $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
-        } else {
-            $cartCount = 0;
-            $likeCount = 0;
-        }
+    echo '</div>';
+    echo '</section>';
+}
 
-        echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
-        echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
-
-        echo '<section id="two">';
-        echo '<h2>🔍 Search results for "' . htmlspecialchars($keyword) . '"</h2>';
-        echo '<div class="row">';
-
-        foreach ($books as $book) {
-            $img = !empty($book->image_url) ? htmlspecialchars($book->image_url) : 'images/thumbs/default.jpg';
-            $name = htmlspecialchars($book->name);
-            $author = htmlspecialchars($book->author);
-            $desc = nl2br(htmlspecialchars($book->description));
-            $price = htmlspecialchars($book->price);
-            $id = $book->getID();
-
-            echo '
-            <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-            <p> ' . $id . ' </p>
-                <a href="' . $img . '" class="image fit thumb">
-                    <img src="' . $img . '" alt="' . $name . '" />
-                </a>
-
-                <h3>' . $name . '</h3>
-                <p><strong>Author:</strong> ' . $author . '</p>
-                <p>' . $desc . '</p>
-                <p><strong>Price:</strong> ' . $price . ' €</p>
-
-                <div style="margin-top:10px;">
-                    <button class="add-to-cart" data-id="' . htmlspecialchars($id) . '" style="background:#2ecc71; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer;">
-                        ➕ Add to Cart
-                    </button>
-                    <button class="like-button" data-id="' . htmlspecialchars($id) . '"
-                     style="background:#e74c3c; color:white; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; margin-left:10px;">
-                     ❤️ Like
-                     </button>
-                </div>
-            </article>';
-        }
-
-        echo '</div>';
-        echo '</section>';
-    }
 }
