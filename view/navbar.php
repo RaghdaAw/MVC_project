@@ -16,7 +16,7 @@ $likeCount = $userId ? LikeModel::getLikeCount($userId) : 0;
     <div class="nav-links">
         <!-- <a href="public.php?page=userDashboard">Home</a> -->
       <a href="/MVC-project/MVC_project/public.php?page=userDashboard">Home</a>
-        <a href="#about">About Us</a>
+       <a href="public.php?page=userDashboard#about">About Us</a>
         <a href="public.php?page=cart" id="num">🛒 <span id="cartCount"><?= intval($cartCount) ?></span></a>
         <a href="public.php?page=like" id="num">❤️ <span id="likeCount"><?= intval($likeCount) ?></span></a>
         <a href="public.php?page=logout">🚪 Logout</a>
