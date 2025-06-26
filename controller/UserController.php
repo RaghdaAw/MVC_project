@@ -37,8 +37,7 @@ class UserController
     public static function handleRegister()
 {
     global $pdo;
-
-    echo "<h1>Register</h1>";
+    
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $firstname = sanitizeInput($_POST['firstname'] ?? '');
