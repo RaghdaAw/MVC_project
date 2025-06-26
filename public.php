@@ -6,6 +6,8 @@ include_once __DIR__ . '/controller/UserController.php';
 include_once __DIR__ . '/controller/BookController.php';
 include_once __DIR__ . '/controller/CartController.php';
 include_once __DIR__ . '/controller/LikeController.php';
+include_once __DIR__ . '/controller/ContactController.php';
+
 
 include_once __DIR__ . '/model/UserModel.php';
 include_once __DIR__ . '/model/CartModel.php';
@@ -121,6 +123,11 @@ switch ($page) {
     case 'removeFromLike':
         LikeController::delete();
         break;
+
+case 'contact':
+    $controller = new ContactController();
+    $controller->index();
+    break;
 
     // ✅ Search
     case 'search':
