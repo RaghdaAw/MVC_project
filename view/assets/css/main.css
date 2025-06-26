@@ -186,6 +186,104 @@ h2.page-title {
 .book-actions {
   margin-top: 10px;
 }
+
+.back-to-home {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #35251e;
+    padding: 15px 30px;
+    color: white;
+    text-decoration: none;
+}
+.your-cart-text {
+    font-size: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.no-items-cart {
+    transform: translate(165%, 100%);
+    font-size: 25px;
+    color: darkred;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.cart-book-cards {
+    transform: translateX(20%);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.cart-book-card {
+    background: white;
+    width: 500px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+}
+.cart-book-card:hover {
+    transform: scale(1.02);
+}
+.cart-book-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+.no-image {
+    width: 100%;
+    height: 200px;
+    background-color: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 16px;
+}
+.cart-book-info {
+    padding: 15px;
+}
+.cart-book-info h3 {
+    margin: 0 0 10px;
+    color: #4a3329;
+}
+.cart-book-info p {
+    margin: 5px 0;
+    color: #444;
+}
+.quantity-count {
+    text-decoration: none;
+    background: #dddddd;
+    width: 25px;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    display: flex;
+    flex-direction: row;
+}
+.cart-remove {
+    text-decoration: none;
+    background: darkred;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+}
+.cart-remove:hover {
+    background: #510101;
+}
 .edit-btn,
 .delete-btn {
   padding: 6px 12px;
@@ -225,6 +323,24 @@ h2.page-title {
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 1.5rem;
 } /* Book Card */
+
+#two {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 1rem;
+}
+#two h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #2b2d42;
+    margin-bottom: 2rem;
+} /* Grid layout */
+#two .cart-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
 .work-item {
   background-color: #fff;
   border: 1px solid #ddd;
@@ -383,34 +499,79 @@ form label {
 .social-icons a:hover {
   background: #515151;
   transform: scale(1.1);
-} /* Contact Button */
+}
+
+.contact-us-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #4a3329;
+}
+
+.contact-form {
+    background: none;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 1000px;
+
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 14px 18px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    width: 560px;
+    transition: border-color 0.3s;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: #7abaff; /* Highlight on focus */
+}
+
+.contact-form button {
+    padding: 14px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #7abaff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.contact-form button:hover {
+    background-color: #5a9be0;
+}
+
+
+/* Contact Button */
 .contact-button {
-  background: #876540;
-  color: white;
-  padding: 10px 18px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: background 0.3s ease, transform 0.2s ease;
+    background: #876540;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background 0.3s ease, transform 0.2s ease;
 }
 .contact-button:hover {
-  background: #388e3c;
-  transform: scale(1.05);
+    background: #574129;
+    transform: scale(1.05);
 }
-.contact-container {
-  width: 100%;
-  max-width: 600px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-  padding: 40px;
-  margin: 20px;
-  transition: transform 0.3s ease;
+.back-to-home-button {
+    color: #afabab;
+    text-decoration: none;
 }
-.contact-container:hover {
-  transform: translateY(-5px);
-} /* Form Styles */
+/* Form Styles */
 .register-body {
   background: #fff7e6;
 }
@@ -544,3 +705,4 @@ textarea {
     transform: translateY(0);
   }
 }
+
