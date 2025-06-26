@@ -4,42 +4,12 @@ html {
     scroll-behavior: smooth;
 
 }
-<<<<<<< HEAD
 .logo img {
     width: 40px;
     height: auto;
     border-radius: 20px;
     margin-right: 15px;
     vertical-align: middle;
-=======
-* {
-    font-family: 'Poppins', sans-serif;
-}
-
-/* User Navbar */
-
-.user-navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #35251e;
-    padding: 15px 30px;
-    color: white;
-}
-
-.user-navbar .nav-links {
-    display: flex;
-    gap: 20px;
-}
-.user-navbar .nav-links a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s;
-}
-.user-navbar .nav-links a:hover {
-    color: #a67c4d;
->>>>>>> origin/Yara
 }
 /* Navbar Admin */
 .admin-navbar {

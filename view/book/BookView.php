@@ -134,7 +134,6 @@
         $price = htmlspecialchars($book->price);
         $id_product= $book->getID();
 
-<<<<<<< HEAD
         echo '
         <article class="col-6 col-12-xsmall work-item" >
             <a href="' . $img . '" class="image fit thumb">
@@ -145,20 +144,12 @@
             <p><strong>Author:</strong> ' . $author . '</p>
             <p>' . $desc . '</p>
             <p><strong>Price:</strong> ' . $price . ' €</p>
-=======
-        // echo '<a href="public.php?page=cart" id="num">🛒 <span id="cartCount">' . intval($cartCount) . '</span></a>';
-        // echo ' <a href="public.php?page=like" id="num">❤️ <span id="likeCount">' . intval($likeCount) . '</span></a>';
-        echo '<section id="two">';
-        echo '<h2>📘 Books</h2>';
-        echo '<div class="row">';
->>>>>>> origin/Yara
 
             <div style="margin-top:10px;">';
 
         if (isset($_SESSION['user_id'])) {
             // Display buttons only if user is logged in
             echo '
-<<<<<<< HEAD
                 <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
                     ➕ Add to Cart
                 </button>
@@ -167,28 +158,6 @@
                 </button>';
         } else {
             echo '<p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p>';
-=======
-            <article class="col-6 col-12-xsmall work-item" >
-            
-                <a href="' . $img . '" class="image fit thumb">
-                    <img src="' . $img . '" alt="' . $name . '" />
-                </a>
-
-                <h3>' . $name . '</h3>
-                <p class="author-text">' . $author . '</p>
-                <p class="desc-text">' . $desc . '</p>
-                <p class="price-text"><strong>€ ' . $price . '</strong> </p>
-
-                <div style="margin-top:10px;">
-                    <button class="add-to-cart" data-id="' . htmlspecialchars($id_product) . '">
-                        ➕ Add to Cart
-                    </button>
-                    <button class="like-button" data-id="' . htmlspecialchars($id_product) . '">
-                     ❤️ Like
-                     </button>
-                </div>
-            </article>';
->>>>>>> origin/Yara
         }
 
         echo '</div>

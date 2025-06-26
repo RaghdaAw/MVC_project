@@ -38,7 +38,6 @@ class UserController
 {
     global $pdo;
 
-<<<<<<< HEAD
     echo "<h1>Register</h1>";
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -46,13 +45,6 @@ class UserController
         $lastname = sanitizeInput($_POST['lastname'] ?? '');
         $username = sanitizeInput($_POST['username'] ?? '');
         $password = trim($_POST['password'] ?? ''); // نتحقق لاحقًا من القوة
-=======
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $firstname = trim($_POST['firstname'] ?? '');
-            $lastname = trim($_POST['lastname'] ?? '');
-            $username = trim($_POST['username'] ?? '');
-            $password = trim($_POST['password'] ?? '');
->>>>>>> origin/Yara
 
         // ✅ check if all fields are filled
         if ($firstname === '' || $lastname === '' || $username === '' || $password === '') {
