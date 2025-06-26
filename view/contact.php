@@ -18,6 +18,7 @@ $likeCount = $userId ? LikeModel::getLikeCount($userId) : 0;
 </head>
 <body>
 
+    <?php include 'navbar.php'; ?>
 <!--        <a class="back-to-home-button" href="/public.php?page=userDashboard"> Back to Home </a>-->
         <h2 class="contact-us-text">Contact Us</h2>
         <form class="contact-form" action="contact.php" method="post">
