@@ -117,8 +117,12 @@ class BookView
     {
         if (isset($_SESSION['user_id'])) {
             include __DIR__ . '/../navbar.php';
+            include __DIR__ . '/../book_hello.php';
+
         } else {
             include __DIR__ . '/../navbar_guest.php';
+            include __DIR__ . '/../book_hello.php';
+
         }
         echo '<section id="two">';
         echo '<h2>📘 Books</h2>';

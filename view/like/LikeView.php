@@ -23,10 +23,12 @@ class LikeView
         }
     }
 
-    // عرض قائمة الإعجابات للمستخدم
+   
     public static function renderUserLikeList($items)
 {
-    echo "<a class='back-to-home' href='public.php?page=userDashboard'>🔙 Back to Home</a>";
+    // echo "<a class='back-to-home' href='public.php?page=userDashboard'>🔙 Back to Home</a>";
+            include __DIR__ . '/../navbar.php';
+
     echo "<h2 class='your-cart-text'>❤️ Your Favorites</h2>";
 
     echo '<section id="two">';
