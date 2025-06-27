@@ -103,6 +103,7 @@ switch ($page) {
             echo "❌ Missing cart_id.";
             exit;
         }
+        
 
         $cart_id = $_GET['cart_id'];
         CartModel::decreaseOrDelete($cart_id);

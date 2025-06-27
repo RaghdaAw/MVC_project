@@ -21,19 +21,29 @@ class CartView
 
     public static function renderUserCartList($items)
     {
+<<<<<<< HEAD
         echo "<a href='public.php?page=userDashboard'>🔙 Back to Dashboard</a>";
+=======
+
+        echo "<a class='back-to-home' href='public.php?page=userDashboard'>🔙 Back to Home</a>";
+>>>>>>> origin/test_admin
         echo "<h2 class='your-cart-text'>🛒 Your Cart</h2>";
 
         echo '<section id="two">';
         echo '<div class="cart-row">';
 
         if (empty($items)) {
+<<<<<<< HEAD
             echo "<p class='no-items-cart'>No items in cart.</p>";
+=======
+            echo "<p class='no-items-cart' >No items in cart.</p>";
+>>>>>>> origin/test_admin
         } else {
             echo "<div class='cart-book-cards'>"; // ✅ Start grid container outside the loop
 
             foreach ($items as $item) {
                 echo "<div class='cart-book-card'>";
+<<<<<<< HEAD
 
                 echo "<div class='cart-book-info'>";
 
@@ -48,6 +58,18 @@ class CartView
                 echo "<p><strong>Description:</strong><br>" . nl2br(htmlspecialchars($item['description'])) . "</p>";
 
                 echo "<p>Quantity: " . htmlspecialchars($item['quantity']) . "</p>";
+=======
+
+                echo "<div class='cart-book-info'>";
+                if (!empty($item['image_url'])) {
+                    echo "<p><img src='" . htmlspecialchars($item['image_url']) . "' alt='Book Image' style='width:100px; height:auto;'></p>";
+                }
+                echo "<h3>" . htmlspecialchars($item['name']) . "</h3>";
+                echo "<p>" . htmlspecialchars($item['author']) . "</p>";
+                echo "<p>€ " . htmlspecialchars($item['price']) . "</p>";
+                echo "<p class='quantity-count'>" . htmlspecialchars($item['quantity']) . "</p>";
+                echo "<br>";
+>>>>>>> origin/test_admin
                 echo "<a class='cart-remove' href='public.php?page=removeFromCart&cart_id=" . $item['cart_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item?\")'>🗑️ Remove</a>";
 
                 echo "</div>"; // close book-info
@@ -60,5 +82,6 @@ class CartView
         echo "</div>"; // close row
         echo "</section>"; // close section
     }
+
 }
 ?>
