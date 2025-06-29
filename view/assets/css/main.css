@@ -56,6 +56,19 @@ html {
   font-size: 0.95rem;
   opacity: 0.9;
 }
+/* logo */
+.logo img {
+    height: 40px;   
+    width: auto;            
+    border-radius: 20px;     
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05); 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+/* Hello Section */
 .bookly-hello {
   display: flex;
   flex-direction: column;
@@ -706,3 +719,14 @@ textarea {
   }
 }
 
+.warning{
+    color: darkred;
+    font-weight: 700;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #f8d7da;
+    border-radius: 8px;
+    animation: fadeIn 0.5s ease;
+}

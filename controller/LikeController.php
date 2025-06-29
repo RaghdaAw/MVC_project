@@ -59,12 +59,12 @@ class LikeController
     {
         self::startSession();
 
-        if (!isset($_GET['idlike']) || !isset($_SESSION['user_id'])) {
+        if (!isset($_GET['like_id']) || !isset($_SESSION['user_id'])) {
             echo "❌ Invalid request.";
             return;
         }
 
-        $like_id = (int) $_GET['idlike'];
+        $like_id = (int) $_GET['like_id'];
         $user_id = (int) $_SESSION['user_id'];
 
         $success = LikeModel::removeFromLike($user_id, $like_id);
