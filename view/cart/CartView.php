@@ -48,16 +48,19 @@ class CartView
                 echo "<br>";
                 echo "<a class='cart-remove' href='public.php?page=removeFromCart&cart_id=" . $item['cart_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item?\")'>🗑️ Remove</a>";
 
-                echo "</div>"; // close book-info
-                echo "</div>"; // close book-card
+                echo "</div>"; 
+                echo "</div>"; 
             }
 
-            echo "</div>"; // ✅ Close grid container after the loop
+            echo "</div>"; 
         }
 
-        echo "</div>"; // close row
-        echo "</section>"; // close section
+        echo "</div>"; 
+        echo "</section>"; 
+        include __DIR__ . '/../footer.php'; 
     }
 
 }
+      
+
 ?>

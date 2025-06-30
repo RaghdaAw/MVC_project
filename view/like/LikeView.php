@@ -60,6 +60,7 @@ class LikeView
 
     echo "</div>"; 
     echo "</section>"; 
+      include __DIR__ . '/../footer.php'; 
 }
 }
 ?>

@@ -14,6 +14,7 @@ class ContactView
             <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
             <button type="submit">Send Message</button>
         </form>
+         <?php include __DIR__ . '/footer.php'; ?>
 
 <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
