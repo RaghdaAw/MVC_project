@@ -11,9 +11,13 @@ class CartController
             return;
         }
 
-        $userId = $_SESSION['user_id'];
+        $userId =(int) $_SESSION['user_id'];
         $items = CartModel::getCartItemsByUser($userId);
-        CartView::renderUserCartList($items);
+        $cartCount = CartModel::getCartItemCount($userId);
+        $likeCount = LikeModel::getLikeCount($userId);
+
+
+        CartView::renderUserCartList($items, $cartCount, $likeCount);
     }
 
     public static function addToCart()

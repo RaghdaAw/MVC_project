@@ -54,7 +54,6 @@ class CartModel extends BaseModel
         $stmt->execute();
     }
 
-    // جلب عناصر السلة للمستخدم مع بيانات المنتجات
     public static function getCartItemsByUser($user_id)
     {
         global $pdo;
@@ -68,7 +67,6 @@ class CartModel extends BaseModel
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    // حساب العدد الإجمالي للعناصر في السلة
     public static function getCartItemCount($user_id)
     {
         global $pdo;

@@ -1,27 +1,22 @@
 <?php
-
-require_once 'model/CartModel.php';
-require_once 'model/LikeModel.php';
+require_once __DIR__ . '/../model/CartModel.php';
+require_once __DIR__ . '/../model/LikeModel.php';
+require_once __DIR__ . '/../view/contact.php';
 
 class ContactController
 {
-    public function index()
+    public static function show()
     {
-        session_start();
+        // session_start();
 
-        $userId = $_SESSION['user_id'] ?? null;
-        $cartCount = $userId ? CartModel::getCartItemCount($userId) : 0;
-        $likeCount = $userId ? LikeModel::getLikeCount($userId) : 0;
-        $messageSent = false;
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $name = htmlspecialchars($_POST['name']);
-            $email = htmlspecialchars($_POST['email']);
-            $subject = htmlspecialchars($_POST['subject']);
-            $message = htmlspecialchars($_POST['message']);
-            $messageSent = true;
+        $cartCount = 0;
+        $likeCount = 0;
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+            $cartCount = CartModel::getCartItemCount($user_id);
+            $likeCount = LikeModel::getLikeCount($user_id);
         }
 
-        require 'view/contact.php';
+        ContactView::renderContactPage($cartCount, $likeCount);
     }
 }

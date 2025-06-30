@@ -2,7 +2,6 @@
 <?php
 class LikeView
 {
-    // عرض العناصر بشكل بسيط (لم يُستخدم في الكود الحالي غالباً)
     public static function renderLiket($items)
     {
         foreach ($items as $book) {
@@ -24,9 +23,9 @@ class LikeView
     }
 
    
-    public static function renderUserLikeList($items)
+    public static function renderUserLikeList($items, $cartCount, $likeCount)
 {
-    // echo "<a class='back-to-home' href='public.php?page=userDashboard'>🔙 Back to Home</a>";
+
             include __DIR__ . '/../navbar.php';
 
     echo "<h2 class='your-cart-text'>❤️ Your Favorites</h2>";
@@ -37,14 +36,14 @@ class LikeView
     if (empty($items)) {
         echo "<p class='no-items-cart'>No items in favorites.</p>";
     } else {
-        echo "<div class='cart-book-cards'>"; // Start grid container outside the loop
+        echo "<div class='cart-book-cards'>"; 
 
         foreach ($items as $item) {
             echo "<div class='cart-book-card'>";
 
             echo "<div class='cart-book-info'>";
             if (!empty($item['image_url'])) {
-                echo "<p><img src='" . htmlspecialchars($item['image_url']) . "' alt='Book Image' style='width:100px; height:auto;'></p>";
+                echo "<p><img src='" . htmlspecialchars($item['image_url']) . "' alt='Book Image'></p>";
             }
             echo "<h3>" . htmlspecialchars($item['name']) . "</h3>";
             echo "<p>" . htmlspecialchars($item['author']) . "</p>";
@@ -52,15 +51,16 @@ class LikeView
             echo "<br>";
             echo "<a class='cart-remove' href='public.php?page=removeFromLike&like_id=" . $item['like_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item from favorites?\")'>🗑️ Remove</a>";
 
-            echo "</div>"; // close book-info
-            echo "</div>"; // close book-card
+            echo "</div>"; 
+            echo "</div>"; 
         }
 
-        echo "</div>"; // Close grid container after the loop
+        echo "</div>";
     }
 
-    echo "</div>"; // close row
-    echo "</section>"; // close section
+    echo "</div>"; 
+    echo "</section>"; 
+      include __DIR__ . '/../footer.php'; 
 }
 }
 ?>
