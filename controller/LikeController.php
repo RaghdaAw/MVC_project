@@ -50,12 +50,10 @@ class LikeController
 
     $user_id = (int) $_SESSION['user_id'];
 
-    // ✅ تحميل البيانات من الموديلات
     $items = LikeModel::getLikeItemsByUser($user_id);
     $cartCount = CartModel::getCartItemCount($user_id);
     $likeCount = LikeModel::getLikeCount($user_id);
 
-    // ✅ تمرير كل القيم إلى View
     LikeView::renderUserLikeList($items, $cartCount, $likeCount);
 }
 
