@@ -39,20 +39,26 @@ class LikeController
     }
 
     // Show liked books by user
-    public static function showLike()
-    {
-        self::startSession();
+  public static function showLike()
+{
+    self::startSession();
 
-        if (!isset($_SESSION['user_id'])) {
-            echo "❌ Please log in to view your Likes.";
-            return;
-        }
-
-        $user_id = (int) $_SESSION['user_id'];
-        $items = LikeModel::getLikeItemsByUser($user_id);
-
-        LikeView::renderUserLikeList($items);
+    if (!isset($_SESSION['user_id'])) {
+        echo "❌ Please log in to view your Likes.";
+        return;
     }
+
+    $user_id = (int) $_SESSION['user_id'];
+
+    // ✅ تحميل البيانات من الموديلات
+    $items = LikeModel::getLikeItemsByUser($user_id);
+    $cartCount = CartModel::getCartItemCount($user_id);
+    $likeCount = LikeModel::getLikeCount($user_id);
+
+    // ✅ تمرير كل القيم إلى View
+    LikeView::renderUserLikeList($items, $cartCount, $likeCount);
+}
+
 
     // Delete a like by ID
     public static function delete()

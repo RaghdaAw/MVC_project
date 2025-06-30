@@ -19,7 +19,7 @@ class CartView
         }
     }
 
-    public static function renderUserCartList($items)
+    public static function renderUserCartList($items, $cartCount, $likeCount)
     {
 
         // echo "<a class='back-to-home' href='public.php?page=userDashboard'>🔙 Back to Home</a>";

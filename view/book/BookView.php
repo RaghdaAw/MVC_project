@@ -113,17 +113,18 @@ class BookView
         <?php
     }
 
-    public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
-    {
-        if (isset($_SESSION['user_id'])) {
-            include __DIR__ . '/../navbar.php';
-            include __DIR__ . '/../book_hello.php';
-
-        } else {
-            include __DIR__ . '/../navbar_guest.php';
-            include __DIR__ . '/../book_hello.php';
-
-        }
+  public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
+{
+    if (isset($_SESSION['user_id'])) {
+        // ✅ مرر القيم إلى navbar.php
+        $cartCount = intval($cartCount);
+        $likeCount = intval($likeCount);
+        include __DIR__ . '/../navbar.php';
+        include __DIR__ . '/../book_hello.php';
+    } else {
+        include __DIR__ . '/../navbar_guest.php';
+        include __DIR__ . '/../book_hello.php';
+    }
         echo '<section id="two">';
         echo '<h2>📘 Books</h2>';
         echo '<div class="row">';
