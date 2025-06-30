@@ -134,16 +134,16 @@ class BookView
             $desc = nl2br(htmlspecialchars($book->description));
             $price = htmlspecialchars($book->price);
             $id_product = $book->getID(); ?>
-            <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px; margin:10px;"> <a
+            <article class="col-6 col-12-xsmall work-item"> <a
                     href="<?= $img ?>" class="image fit thumb"> <img src="<?= $img ?>" alt="<?= $name ?>" /> </a>
                 <h3><?= $name ?></h3>
                 <p class="author-text"><?= $author ?></p>
                 <p class="desc-text"><?= $desc ?></p>
                 <p class="price-text"><strong>€ <?= $price ?></strong></p>
-                <div style="margin-top:10px;"> <?php if (isset($_SESSION['user_id'])): ?> <button class="add-to-cart"
+                <div> <?php if (isset($_SESSION['user_id'])): ?> <button class="add-to-cart"
                             data-id="<?= htmlspecialchars($id_product) ?>"> ➕ Add to Cart </button> <button class="like-button"
                             data-id="<?= htmlspecialchars($id_product) ?>"> ❤️ Like </button> <?php else: ?>
-                        <p style="color:red;">Log in om boeken toe te voegen aan je winkelwagen ❤️</p> <?php endif; ?>
+                        <p class="warning">Log in to add books to your cart or like it.</p> <?php endif; ?>
                 </div>
             </article>
         <?php }
@@ -154,10 +154,15 @@ class BookView
         echo '</section>';
         include __DIR__ . '/../footer.php';
     }
-    public static function renderSearchResults($books, $keyword)
+   public static function renderSearchResults($books, $keyword)
 {
-               include __DIR__ . '/../navbar.php';
-
+    if (isset($_SESSION['user_id'])) {
+        include __DIR__ . '/../navbar.php';
+        include __DIR__ . '/../book_hello.php';
+    } else {
+        include __DIR__ . '/../navbar_guest.php';
+        include __DIR__ . '/../book_hello.php';
+    }
 
     echo '<section id="two">';
     echo '<h2>🔍 Search results for "' . htmlspecialchars($keyword) . '"</h2>';
@@ -169,33 +174,32 @@ class BookView
         $author = htmlspecialchars($book->author);
         $desc = nl2br(htmlspecialchars($book->description));
         $price = htmlspecialchars($book->price);
-        $id = $book->getID();
-
-        echo '
-        <article class="col-6 col-12-xsmall work-item" style="border:1px solid #ccc; padding:10px;">
-            <a href="' . $img . '" class="image fit thumb">
-                <img src="' . $img . '" alt="' . $name . '" />
+        $id_product = $book->getID();
+        ?>
+        <article class="col-6 col-12-xsmall work-item">
+            <a href="<?= $img ?>" class="image fit thumb">
+                <img src="<?= $img ?>" alt="<?= $name ?>" />
             </a>
-
-            <h3>' . $name . '</h3>
-            <p><strong>Author:</strong> ' . $author . '</p>
-            <p>' . $desc . '</p>
-            <p><strong>Price:</strong> ' . $price . ' €</p>
-
-            <div style="margin-top:10px;">
-                <button class="add-to-cart" data-id="' . htmlspecialchars($id) . '" >
-                    ➕ Add to Cart
-                </button>
-                <button class="like-button" data-id="' . htmlspecialchars($id) . '"
-                 >
-                 ❤️ Like
-                 </button>
+            <h3><?= $name ?></h3>
+            <p class="author-text"><?= $author ?></p>
+            <p class="desc-text"><?= $desc ?></p>
+            <p class="price-text"><strong>€ <?= $price ?></strong></p>
+            <div>
+                <?php if (isset($_SESSION['user_id'])): ?>
+                    <button class="add-to-cart" data-id="<?= htmlspecialchars($id_product) ?>">➕ Add to Cart</button>
+                    <button class="like-button" data-id="<?= htmlspecialchars($id_product) ?>">❤️ Like</button>
+                <?php else: ?>
+                    <p  class="warning">Log in to add books to your cart or like it.</p>
+                <?php endif; ?>
             </div>
-        </article>';
+        </article>
+        <?php
     }
 
     echo '</div>';
     echo '</section>';
 }
+
+
 
 }
