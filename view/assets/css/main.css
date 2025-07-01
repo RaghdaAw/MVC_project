@@ -2,6 +2,19 @@
 html {
   scroll-behavior: smooth;
 }
+/* اجعل الصفحة تأخذ كامل الطول */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+/* المحتوى الرئيسي يتمدد لملء الفراغ */
+main {
+    flex: 1;
+}
 * {
   font-family: "Poppins", sans-serif;
 } /* User Navbar */
@@ -68,6 +81,7 @@ html {
     transform: scale(1.05); 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
+
 /* Hello Section */
 .bookly-hello {
   display: flex;

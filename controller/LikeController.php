@@ -21,41 +21,46 @@ class LikeController
             return;
         }
 
-        $user_id    = (int) $_SESSION['user_id'];
+        $user_id = (int) $_SESSION['user_id'];
         $product_id = (int) $_GET['id'];
 
         $like = new LikeModel();
-        $like->user_id    = $user_id;
+        $like->user_id = $user_id;
         $like->product_id = $product_id;
 
-        $success = $like->save();
+        // $success = $like->save();
 
-        if ($success) {
+        $status = $like->save();
+
+        if ($status === 'added') {
             header("Location: public.php?page=books");
             exit;
-        } else {
+        } elseif ($status === 'exists') {
             echo "❤️ You already liked this book.";
+        } else {
+            echo "❌ Failed to save like.";
         }
+
     }
 
     // Show liked books by user
-  public static function showLike()
-{
-    self::startSession();
+    public static function showLike()
+    {
+        self::startSession();
 
-    if (!isset($_SESSION['user_id'])) {
-        echo "❌ Please log in to view your Likes.";
-        return;
+        if (!isset($_SESSION['user_id'])) {
+            echo "❌ Please log in to view your Likes.";
+            return;
+        }
+
+        $user_id = (int) $_SESSION['user_id'];
+
+        $items = LikeModel::getLikeItemsByUser($user_id);
+        $cartCount = CartModel::getCartItemCount($user_id);
+        $likeCount = LikeModel::getLikeCount($user_id);
+
+        LikeView::renderUserLikeList($items, $cartCount, $likeCount);
     }
-
-    $user_id = (int) $_SESSION['user_id'];
-
-    $items = LikeModel::getLikeItemsByUser($user_id);
-    $cartCount = CartModel::getCartItemCount($user_id);
-    $likeCount = LikeModel::getLikeCount($user_id);
-
-    LikeView::renderUserLikeList($items, $cartCount, $likeCount);
-}
 
 
     // Delete a like by ID

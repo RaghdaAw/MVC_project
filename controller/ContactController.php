@@ -7,7 +7,6 @@ class ContactController
 {
     public static function show()
     {
-        // session_start();
 
         $cartCount = 0;
         $likeCount = 0;

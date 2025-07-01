@@ -27,7 +27,7 @@ class LikeView
 {
 
             include __DIR__ . '/../navbar.php';
-
+ echo "<main>";
     echo "<h2 class='your-cart-text'>❤️ Your Favorites</h2>";
 
     echo '<section id="two">';
@@ -60,7 +60,9 @@ class LikeView
 
     echo "</div>"; 
     echo "</section>"; 
+    echo "</main>";
       include __DIR__ . '/../footer.php'; 
+   
 }
 }
 ?>

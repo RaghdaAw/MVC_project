@@ -160,9 +160,9 @@ class BookController
 
         $books = Book::getAll();
         global $pdo;
-
         $likeCount = 0;
         $cartCount = 0;
+
 
         if (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id'])) {
             $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
@@ -172,8 +172,10 @@ class BookController
         BookView::renderUserBookList($books, $cartCount, $likeCount);
     }
 
-    public static function search() : void
+    public static function search(): void
     {
+        $likeCount = 0;
+        $cartCount = 0;
         if (!isset($_GET['q']) || empty(trim($_GET['q']))) {
             echo "❌ Please enter a search term.";
             return;
@@ -181,13 +183,15 @@ class BookController
 
         $keyword = htmlspecialchars(trim($_GET['q']));
         $books = Book::search($keyword);
+        $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
+        $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
 
         if (empty($books)) {
             echo "❌ No results found for: " . htmlspecialchars($keyword);
             return;
         }
 
-        BookView::renderSearchResults($books, $keyword);
+        BookView::renderSearchResults($books, $keyword, $cartCount, $likeCount);
     }
 }
 
