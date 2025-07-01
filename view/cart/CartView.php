@@ -22,7 +22,8 @@ class CartView
     public static function renderUserCartList($items, $cartCount, $likeCount)
     {
 
-            include __DIR__ . '/../navbar.php';
+        include __DIR__ . '/../navbar.php';
+        echo "<main>";
 
         echo "<h2 class='your-cart-text'>🛒 Your Cart</h2>";
 
@@ -48,19 +49,21 @@ class CartView
                 echo "<br>";
                 echo "<a class='cart-remove' href='public.php?page=removeFromCart&cart_id=" . $item['cart_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item?\")'>🗑️ Remove</a>";
 
-                echo "</div>"; 
-                echo "</div>"; 
+                echo "</div>";
+                echo "</div>";
             }
 
-            echo "</div>"; 
+            echo "</div>";
         }
 
-        echo "</div>"; 
-        echo "</section>"; 
-        include __DIR__ . '/../footer.php'; 
+        echo "</div>";
+        echo "</section>";
+        echo "</main>";
+
+        include __DIR__ . '/../footer.php';
     }
 
 }
-      
+
 
 ?>

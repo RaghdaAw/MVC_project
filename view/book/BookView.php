@@ -116,9 +116,9 @@ class BookView
   public static function renderUserBookList($books, $cartCount = 0, $likeCount = 0)
 {
     if (isset($_SESSION['user_id'])) {
-        // ✅ مرر القيم إلى navbar.php
-        $cartCount = intval($cartCount);
-        $likeCount = intval($likeCount);
+        
+        // $cartCount = intval($cartCount);
+        // $likeCount = intval($likeCount);
         include __DIR__ . '/../navbar.php';
         include __DIR__ . '/../book_hello.php';
     } else {
@@ -135,8 +135,9 @@ class BookView
             $desc = nl2br(htmlspecialchars($book->description));
             $price = htmlspecialchars($book->price);
             $id_product = $book->getID(); ?>
-            <article class="col-6 col-12-xsmall work-item"> <a
-                    href="<?= $img ?>" class="image fit thumb"> <img src="<?= $img ?>" alt="<?= $name ?>" /> </a>
+            <article class="work-item">
+                 
+                <a href="<?= $img ?>" class="image fit thumb"> <img src="<?= $img ?>" alt="<?= $name ?>" /> </a>
                 <h3><?= $name ?></h3>
                 <p class="author-text"><?= $author ?></p>
                 <p class="desc-text"><?= $desc ?></p>
@@ -144,6 +145,8 @@ class BookView
                 <div> <?php if (isset($_SESSION['user_id'])): ?> <button class="add-to-cart"
                             data-id="<?= htmlspecialchars($id_product) ?>"> ➕ Add to Cart </button> <button class="like-button"
                             data-id="<?= htmlspecialchars($id_product) ?>"> ❤️ Like </button> <?php else: ?>
+                
+
                         <p class="warning">Log in to add books to your cart or like it.</p> <?php endif; ?>
                 </div>
             </article>
@@ -155,7 +158,7 @@ class BookView
         echo '</section>';
         include __DIR__ . '/../footer.php';
     }
-   public static function renderSearchResults($books, $keyword)
+   public static function renderSearchResults($books, $keyword, $cartCount = 0, $likeCount = 0)
 {
     if (isset($_SESSION['user_id'])) {
         include __DIR__ . '/../navbar.php';

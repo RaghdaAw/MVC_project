@@ -90,10 +90,11 @@ class LikeModel extends BaseModel
     }
 
     // Count all liked products for a user
-  public static function getLikeCount($user_id)
+ public static function getLikeCount($user_id)
 {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT COUNT(DISTINCT product_id) AS total FROM likes WHERE user_id = :user_id");
+    
+    $stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE user_id = :user_id");
     $stmt->execute([':user_id' => $user_id]);
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
     return $result['total'] ?? 0;

@@ -81,8 +81,6 @@ class Book extends BaseModel
         $book->image_url = $data['image_url'];
         return $book;
     }
-
-    // يمكن إضافة دوال خاصة مثل البحث هنا إن أردت، مثلاً:
     public static function search($keyword)
     {
         global $pdo;
