@@ -6,8 +6,7 @@
 
 <nav class="user-navbar">
     <div class="nav-links">
-        <a href="public.php?page=userDashboard" class="logo"> <img src="view/images/Media.jpg" /></a>
-        <a href="/MVC-project/MVC_project/public.php?page=userDashboard">Home</a>
+        <a href="/MVC-project/MVC_project/public.php?page=userDashboard"><strong>BOOKLY</strong></a>
         <a href="public.php?page=userDashboard#about">About Us</a>
         <a href="public.php?page=cart" id="num">🛒 <span id="cartCount"><?= intval($cartCount) ?></span></a>
         <a href="public.php?page=like" id="num">❤️ <span id="likeCount"><?= intval($likeCount) ?></span></a>
