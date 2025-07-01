@@ -83,6 +83,7 @@ switch ($page) {
         break;
 
 
+
     case 'users':
         UserController::showAll();
         break;
