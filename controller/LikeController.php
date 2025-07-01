@@ -39,32 +39,36 @@ class LikeController
     }
 
     // Show liked books by user
-    public static function showLike()
-    {
-        self::startSession();
+  public static function showLike()
+{
+    self::startSession();
 
-        if (!isset($_SESSION['user_id'])) {
-            echo "❌ Please log in to view your Likes.";
-            return;
-        }
-
-        $user_id = (int) $_SESSION['user_id'];
-        $items = LikeModel::getLikeItemsByUser($user_id);
-
-        LikeView::renderUserLikeList($items);
+    if (!isset($_SESSION['user_id'])) {
+        echo "❌ Please log in to view your Likes.";
+        return;
     }
+
+    $user_id = (int) $_SESSION['user_id'];
+
+    $items = LikeModel::getLikeItemsByUser($user_id);
+    $cartCount = CartModel::getCartItemCount($user_id);
+    $likeCount = LikeModel::getLikeCount($user_id);
+
+    LikeView::renderUserLikeList($items, $cartCount, $likeCount);
+}
+
 
     // Delete a like by ID
     public static function delete()
     {
         self::startSession();
 
-        if (!isset($_GET['idlike']) || !isset($_SESSION['user_id'])) {
+        if (!isset($_GET['like_id']) || !isset($_SESSION['user_id'])) {
             echo "❌ Invalid request.";
             return;
         }
 
-        $like_id = (int) $_GET['idlike'];
+        $like_id = (int) $_GET['like_id'];
         $user_id = (int) $_SESSION['user_id'];
 
         $success = LikeModel::removeFromLike($user_id, $like_id);

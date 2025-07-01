@@ -5,7 +5,7 @@
             <a class="twitter-b" href="https://twitter.com" target="_blank" title="Twitter">X</a>
             <a class="instagram-b" href="https://instagram.com" target="_blank" title="Instagram">I</a>
         </div>
-        <a href="view/contact.php" class="contact-button">Contact</a>
+        <a href="public.php?page=contact" class="contact-button">Contact</a>
     </div>
 
     <div class="footer-right">

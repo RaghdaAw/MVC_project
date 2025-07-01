@@ -66,19 +66,19 @@ switch ($page) {
         BookController::update();
         break;
 
-   case 'userDashboard':
-    if (!isset($_SESSION['role'])) {
-        // Visitor
-        $books = Book::findAll(); 
-        BookView::renderUserBookList($books);
-    } elseif ($_SESSION['role'] === 'user') {
-        // User 
-        $books = Book::findAll(); 
-        BookView::renderUserBookList($books, CartModel::getCartItemCount($_SESSION['user_id']), LikeModel::getLikeItemsByUser($_SESSION['user_id']));
-    } else {
-        echo "⛔ Access Denied";
-    }
-    break;
+    case 'userDashboard':
+        if (!isset($_SESSION['role'])) {
+            // Visitor
+            $books = Book::findAll();
+            BookView::renderUserBookList($books);
+        } elseif ($_SESSION['role'] === 'user') {
+            // User 
+            $books = Book::findAll();
+            BookView::renderUserBookList($books, CartModel::getCartItemCount($_SESSION['user_id']), LikeModel::getLikeItemsByUser($_SESSION['user_id']));
+        } else {
+            echo "⛔ Access Denied";
+        }
+        break;
 
 
     case 'users':
@@ -104,10 +104,11 @@ switch ($page) {
             exit;
         }
 
+
         $cart_id = $_GET['cart_id'];
         CartModel::decreaseOrDelete($cart_id);
 
-        // إعادة التوجيه لصفحة السلة بعد التحديث
+       
         header("Location: public.php?page=cart");
         exit;
 
@@ -124,10 +125,9 @@ switch ($page) {
         LikeController::delete();
         break;
 
-case 'contact':
-    $controller = new ContactController();
-    $controller->index();
-    break;
+    case 'contact':
+        ContactController::show();
+        break;
 
     // ✅ Search
     case 'search':

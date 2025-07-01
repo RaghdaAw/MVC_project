@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="/view/assets/css/main.css">
 <?php
 class CartView
 {
@@ -18,33 +19,48 @@ class CartView
         }
     }
 
-    public static function renderUserCartList($items)
+    public static function renderUserCartList($items, $cartCount, $likeCount)
     {
-        echo "<a href='public.php?page=userDashboard'>🔙 Back to Dashboard</a>";
-        echo "<h2>🛒 Your Cart</h2>";
+
+            include __DIR__ . '/../navbar.php';
+
+        echo "<h2 class='your-cart-text'>🛒 Your Cart</h2>";
+
+        echo '<section id="two">';
+        echo '<div class="cart-row">';
 
         if (empty($items)) {
-            echo "<p>No items in cart.</p>";
+            echo "<p class='no-items-cart' >No items in cart.</p>";
         } else {
+            echo "<div class='cart-book-cards'>"; // ✅ Start grid container outside the loop
+
             foreach ($items as $item) {
-                echo "<div style='border:1px solid #ccc; padding:10px; margin-bottom:10px;'>";
+                echo "<div class='cart-book-card'>";
 
-                echo "<p><strong>Quantity:</strong> " . htmlspecialchars($item['quantity']) . "</p>";
-                echo "<h3>" . htmlspecialchars($item['name']) . "</h3>";
-                echo "<p><strong>Author:</strong> " . htmlspecialchars($item['author']) . "</p>";
-                echo "<p><strong>Year:</strong> " . htmlspecialchars($item['year']) . "</p>";
-                echo "<p><strong>Price:</strong> $" . htmlspecialchars($item['price']) . "</p>";
-                echo "<p><strong>Description:</strong><br>" . nl2br(htmlspecialchars($item['description'])) . "</p>";
-
+                echo "<div class='cart-book-info'>";
                 if (!empty($item['image_url'])) {
                     echo "<p><img src='" . htmlspecialchars($item['image_url']) . "' alt='Book Image' style='width:100px; height:auto;'></p>";
                 }
+                echo "<h3>" . htmlspecialchars($item['name']) . "</h3>";
+                echo "<p>" . htmlspecialchars($item['author']) . "</p>";
+                echo "<p>€ " . htmlspecialchars($item['price']) . "</p>";
+                echo "<p class='quantity-count'>" . htmlspecialchars($item['quantity']) . "</p>";
+                echo "<br>";
+                echo "<a class='cart-remove' href='public.php?page=removeFromCart&cart_id=" . $item['cart_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item?\")'>🗑️ Remove</a>";
 
-      echo "<a href='public.php?page=removeFromCart&cart_id=" . $item['cart_id'] . "' onclick='return confirm(\"Are you sure you want to remove this item?\")'>🗑️ Remove</a>";
-
-                echo "</div>";
+                echo "</div>"; 
+                echo "</div>"; 
             }
+
+            echo "</div>"; 
         }
+
+        echo "</div>"; 
+        echo "</section>"; 
+        include __DIR__ . '/../footer.php'; 
     }
+
 }
+      
+
 ?>
