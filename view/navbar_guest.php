@@ -4,9 +4,9 @@
 
     <div class="nav-links">
 
-        <a href="public.php?page=userDashboard" class="logo"> <img src="view/images/Media.jpg" /></a>
-        <a href="public.php?page=userDashboard"> Book Details</a>
-        <a href="#about"> About</a>
+
+        <a href="public.php?page=userDashboard"><strong>BOOKLY</strong></a>
+        <a href="#about">About Us</a>
         <a href="public.php?page=login">🚪 Login</a>
         <a href="public.php?page=register">📝 Register</a>
     </div>
