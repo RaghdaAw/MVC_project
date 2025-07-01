@@ -154,6 +154,7 @@ class BookController
 
     public static function showUserBooks()
     {
+        
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -161,9 +162,11 @@ class BookController
         $books = Book::getAll();
         global $pdo;
         $likeCount = 0;
+        
         $cartCount = 0;
 
 
+        
         if (isset($_SESSION['user_id']) && is_numeric($_SESSION['user_id'])) {
             $likeCount = LikeModel::getLikeCount($_SESSION['user_id']);
             $cartCount = CartModel::getCartItemCount($_SESSION['user_id']);
@@ -174,6 +177,7 @@ class BookController
 
     public static function search(): void
     {
+        
         $likeCount = 0;
         $cartCount = 0;
         if (!isset($_GET['q']) || empty(trim($_GET['q']))) {

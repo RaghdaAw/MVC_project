@@ -69,13 +69,15 @@ switch ($page) {
     case 'userDashboard':
         if (!isset($_SESSION['role'])) {
             // Visitor
-            $books = Book::findAll();
-            BookView::renderUserBookList($books);
+          
+            BookController::showUserBooks();
         } elseif ($_SESSION['role'] === 'user') {
+        
             // User 
             $books = Book::findAll();
-            BookView::renderUserBookList($books, CartModel::getCartItemCount($_SESSION['user_id']), LikeModel::getLikeItemsByUser($_SESSION['user_id']));
+            BookController::showUserBooks();
         } else {
+
             echo "⛔ Access Denied";
         }
         break;
@@ -108,7 +110,7 @@ switch ($page) {
         $cart_id = $_GET['cart_id'];
         CartModel::decreaseOrDelete($cart_id);
 
-       
+
         header("Location: public.php?page=cart");
         exit;
 
